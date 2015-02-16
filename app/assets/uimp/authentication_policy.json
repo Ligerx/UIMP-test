@@ -1,0 +1,4 @@
+{
+	"scheme": "password",
+	"policy": {"minimum_length": 6, "maximum_length": 50}
+}

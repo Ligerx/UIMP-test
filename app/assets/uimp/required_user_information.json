@@ -1,0 +1,6 @@
+{
+	"required_user_information": ["client_id","email"],
+	"optional_user_information": ["phone_number"],
+	"required_non_default_information": [],
+	"optional_non_default_information": []
+}

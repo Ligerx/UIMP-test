@@ -1,4 +1,12 @@
 UIMPTest::Application.routes.draw do
+
+  namespace :uimp do
+    get "information/service_information"
+    get "information/authentication_policy"
+    get "information/required_user_information"
+  end
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
