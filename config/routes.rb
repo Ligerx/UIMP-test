@@ -1,5 +1,8 @@
 UIMPTest::Application.routes.draw do
 
+  root "home#index"
+
+  #get "home/index"
   namespace :uimp do
     get "information/service_information"
     get "information/authentication_policy"
