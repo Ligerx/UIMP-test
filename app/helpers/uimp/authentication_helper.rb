@@ -1,0 +1,2 @@
+module Uimp::AuthenticationHelper
+end

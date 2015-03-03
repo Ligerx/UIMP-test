@@ -1,0 +1,2 @@
+module Uimp::AccountHelper
+end
