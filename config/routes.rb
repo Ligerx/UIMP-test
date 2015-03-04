@@ -8,6 +8,9 @@ UIMPTest::Application.routes.draw do
     get "information/service_information"
     get "information/authentication_policy"
     get "information/required_user_information"
+
+    post "authentication/login", to: "authentication#login"
+    post "account/change_password", to: "account#change_password"
   end
 
 

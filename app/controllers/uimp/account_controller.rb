@@ -4,16 +4,7 @@ class Uimp::AccountController < ApplicationController
     resource = User.find_by_email(params[:user_id]) # does this need strong parameters?
     return unless resource
 
-
     resource.update_with_password(change_password_params)
-
-    #when do we deal with encryption?
-    if resource.valid_password?(params)
-      #sign_in(resource)
-      sign_in_and_redirect(resource) # can use sign_in_and_redirect, but this is not what the UIMP api specifies
-
-      # resource.ensure_authentication_token!
-    end
   end
 
   private

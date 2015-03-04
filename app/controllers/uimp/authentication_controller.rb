@@ -11,7 +11,6 @@ class Uimp::AuthenticationController < ApplicationController
 
       # resource.ensure_authentication_token!
     end
-
   end
 
 
