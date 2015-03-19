@@ -2,5 +2,5 @@
 	"url": "www.x.com",
 	"name": "X",
 	"uimp_version": "1.0",
-	"uimp_uris": [{"Service Information", x.com/uimp/service_information"}]
+	"uimp_uris": [{"Service Information": "x.com/uimp/service_information"}]
 }
