@@ -5,5 +5,5 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
 
-  scope :find_by_email, ->(input_email) { where(email: input_email) }
+  scope :find_by_email, ->(input_email) { find_by(email: input_email) }
 end
