@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class TokenTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+
+  test "valid scope should work" do
+    assert_equal 2, Token.valid.to_a.size
+  end
 end

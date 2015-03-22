@@ -1,5 +1,5 @@
 class Uimp::AuthenticationController < ApplicationController
-  require 'DateTime'
+  require 'date'
 
   def login
     resource = User.find_by_email(params[:user_id]) # does this need strong parameters?
@@ -30,6 +30,7 @@ class Uimp::AuthenticationController < ApplicationController
     render json: { access_token: token.access_token, expires_in: token.time_till_expiration }
   end
 
+
   def destroy_token
     # should this method expire a token, or actually delete it?
     # how does this interact with active/inactive tokens?
@@ -56,18 +57,12 @@ class Uimp::AuthenticationController < ApplicationController
     render json: { result: "successfully deleted token" } and return
   end
 
+
   def active_tokens
-    active_tokens_list = Token.valid.to_a
-    access_tokens = active_tokens_list.map { |t| t.access_token }
+    active_token_records = Token.valid.to_a
+    access_tokens_array = active_token_records.map { |t| t.access_token }
 
-    render json: access_tokens and return
+    token_map = { access_token_list: access_tokens_array }
+    render json: token_map and return
   end
-
-
-  # private
-  # def login_params
-  #   # HOW DOES ENCRYPTION WORK?
-  #   # IS IT PASSED ALREADY ENCRYPTED?
-  #   params.require(:email, :password)
-  # end
 end

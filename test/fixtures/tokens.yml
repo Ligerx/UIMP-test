@@ -1,11 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  access_token: <%= 128.times.map {|i| rand(1..9)}.join %>
+  access_token: <%= 128.times.map {|i| [*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join %>
   user_id: Alex@test.com
   expiration_date: <%= 5.days.from_now.to_datetime %>
 
 two:
-  access_token: <%= 128.times.map {|i| rand(1..9)}.join %>
+  access_token: <%= 128.times.map {|i| [*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join %>
   user_id: Bob@test.com
   expiration_date: <%= 10.minutes.from_now.to_datetime %>
+
+# this token is for Bob again, but is already expired
+three:
+  access_token: <%= 128.times.map {|i| [*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join %>
+  user_id: Bob@test.com
+  expiration_date: <%= 10.minutes.ago.to_datetime %>

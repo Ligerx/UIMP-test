@@ -1,5 +1,4 @@
 class Uimp::AccountController < ApplicationController
-  include Devise::Models::DatabaseAuthenticatable
 
   def change_password
     resource = User.find_by_email(params[:user_id]) # does this need strong parameters?
