@@ -13,9 +13,13 @@ class Token < ActiveRecord::Base
     # ((self.expiration_date - DateTime.current) * 24 * 60 * 60).to_i
     (self.expiration_date - DateTime.current).to_i
   end
-  
-  def self.valid_token?(token)
-    Token.exists?(access_token: token)
+
+  def expired?
+    (time_till_expiration <= 0) ? true : false
+  end
+
+  def not_expired?
+    !expired?
   end
 
   private

@@ -3,7 +3,7 @@
 one:
   access_token: <%= 128.times.map {|i| [*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join %>
   user_id: Alex@test.com
-  expiration_date: <%= 5.days.from_now.to_datetime %>
+  expiration_date: <%= 36000.seconds.from_now.to_datetime %>
 
 two:
   access_token: <%= 128.times.map {|i| [*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join %>

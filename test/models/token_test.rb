@@ -6,13 +6,27 @@ class TokenTest < ActiveSupport::TestCase
     assert_equal 2, Token.valid.to_a.size
   end
 
-  test "valid token should work" do
-    test_token = Token.create(user_id: 'test')
+  test "time till expiration should be default" do
+    token = tokens(:one)
+    assert_in_delta 36000, token.time_till_expiration, 1
 
-    assert Token.valid_token? test_token.access_token
+    token2 = Token.create(user_id: 'test')
+    assert_in_delta 36000, token2.time_till_expiration, 1
   end
 
-  test "no valid token if nil" do
-    assert_not Token.valid_token? nil
+  test "time till expiration should be set to soon" do
+    token = tokens(:one)
+    token.update(expiration_date: 1.minute.from_now.to_datetime)
+
+    assert_in_delta 60, token.time_till_expiration, 1
+  end
+
+  test "expired? should work" do
+    assert tokens(:three).expired?
+  end
+
+  test "not_expired should work" do
+    assert tokens(:one).not_expired?
+    assert tokens(:two).not_expired?
   end
 end

@@ -42,10 +42,13 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     @request.headers['uimp-token'] = test_token1.access_token
     delete :destroy_token, {id: test_token2.id}
 
-    puts "\nTime till expiration"+test_token2.time_till_expiration.to_s
-    puts "\nDateTime.current" + DateTime.current.to_s
+    # puts "\nTime till expiration"+test_token2.time_till_expiration.to_s
+    # puts "\nDateTime.current" + DateTime.current.to_s
 
-    assert_not Token.find(test_token2).valid?
+    json = get_json_from @response.body
+
+    assert_equal "successfully deleted token", json['result'], "#{json['error_description']}"
+    assert test_token2.expired?, "#{test_token2.time_till_expiration}"
     #assert false
   end
 
@@ -61,6 +64,12 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     json['access_token_list'].each do |t|
       assert_equal 128, t.length
     end
+  end
+
+  test "should show valid_credentials works" do
+    controller = Uimp::AuthenticationController.new
+    assert controller.send(:valid_credentials?, {token: tokens(:one).access_token})
+    # assert AuthenticationController.new.send(valid_credentials?, "Alex@test.com", "password")
   end
 
 end
