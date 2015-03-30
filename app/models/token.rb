@@ -14,6 +14,9 @@ class Token < ActiveRecord::Base
     (self.expiration_date - DateTime.current).to_i
   end
   
+  def self.valid_token?(token)
+    Token.exists?(access_token: token)
+  end
 
   private
   # do I need to check that this token is unique?

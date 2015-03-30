@@ -5,7 +5,22 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
 
   test "should log in a user" do
-    assert false
+    user_id = 'Alex@test.com'
+    post :login, {user_id: user_id, password: 'password'}
+    assert_response :redirect
+
+    # assert_not_nil User.current_user
+    assert warden.authenticated?(:user)
+  end
+
+  test "should NOT log in a user" do
+    user_id = 'Alex@test.com'
+    post :login, {user_id: user_id, password: 'wrong-password'}
+    assert_response :success
+
+    json = get_json_from @response.body
+    assert_equal "Invalid login", json['error_description']
+    assert_not warden.authenticated?(:user)
   end
 
 
@@ -20,8 +35,18 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   end
 
 
-  test "should destroy token" do
-    assert false
+  test "should destroy token 2 given token 1" do
+    test_token1 = Token.create(user_id: 'test')
+    test_token2 = Token.create(user_id: 'test')
+
+    @request.headers['uimp-token'] = test_token1.access_token
+    delete :destroy_token, {id: test_token2.id}
+
+    puts "\nTime till expiration"+test_token2.time_till_expiration.to_s
+    puts "\nDateTime.current" + DateTime.current.to_s
+
+    assert_not Token.find(test_token2).valid?
+    #assert false
   end
 
 
