@@ -12,6 +12,8 @@ class TokenTest < ActiveSupport::TestCase
 
     token2 = Token.create(user_id: 'test')
     assert_in_delta 36000, token2.time_till_expiration, 1
+
+    assert_in_delta -600, tokens(:three).time_till_expiration, 1
   end
 
   test "time till expiration should be set to soon" do
@@ -22,6 +24,12 @@ class TokenTest < ActiveSupport::TestCase
   end
 
   test "expired? should work" do
+    assert tokens(:three).expired?
+
+    tokens(:three).update(expiration_date: DateTime.current)
+    assert tokens(:three).expired?
+
+    tokens(:three).update(expiration_date: 1.second.ago.to_datetime)
     assert tokens(:three).expired?
   end
 

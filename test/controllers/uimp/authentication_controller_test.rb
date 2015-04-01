@@ -3,6 +3,7 @@ require 'test_helper'
 class Uimp::AuthenticationControllerTest < ActionController::TestCase
   include Devise::TestHelpers
 
+  # warden.authenticated? method from: http://www.quora.com/How-do-I-test-if-a-Devise-user-got-signed-in-from-a-controller-spec-or-test
 
   test "should log in a user" do
     user_id = 'Alex@test.com'
@@ -39,11 +40,10 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     test_token1 = Token.create(user_id: 'test')
     test_token2 = Token.create(user_id: 'test')
 
-    @request.headers['uimp-token'] = test_token1.access_token
-    delete :destroy_token, {id: test_token2.id}
+    @request.headers["uimp-token"] = test_token1.access_token
+    delete :destroy_token, params: {id: test_token2.id}
+Rails::logger.debug "in test: #{test_token2.time_till_expiration}"
 
-    # puts "\nTime till expiration"+test_token2.time_till_expiration.to_s
-    # puts "\nDateTime.current" + DateTime.current.to_s
 
     json = get_json_from @response.body
 
@@ -69,7 +69,10 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   test "should show valid_credentials works" do
     controller = Uimp::AuthenticationController.new
     assert controller.send(:valid_credentials?, {token: tokens(:one).access_token})
-    # assert AuthenticationController.new.send(valid_credentials?, "Alex@test.com", "password")
+    assert controller.send(:valid_credentials?, {user_id: "Alex@test.com", password: "password"})
+
+    assert_not controller.send(:valid_credentials?, {token: "aaaaaaaaaaaaaaa"})
+    assert_not controller.send(:valid_credentials?, {user_id: "Alex@test.com", password: "wrong-password"})
   end
 
 end

@@ -29,11 +29,13 @@ class Uimp::AuthenticationController < ApplicationController
     # The access token should be passed in the header
     # The header token checks the validity of the action
     # The id passed is the token to be deleted
-    unless valid_credentials? token: response.headers["uimp-token"]
+    header_token = request.headers["uimp-token"]
+
+    unless valid_credentials?(token: header_token)
       render json: { result: "failed", error_code: -4, error_description: "Invalid access token" } and return
     end
 
-    header_token = Token.find_by_token(response.headers["uimp-token"])
+    header_token = Token.find_by_access_token(header_token)
     token_to_delete = Token.find(params[:id])
 
     if token_to_delete.nil?
@@ -46,7 +48,12 @@ class Uimp::AuthenticationController < ApplicationController
 
     # IF one of these things, then render
     # token_to_delete.destroy
+Rails::logger.debug "Interesting stuff"
+Rails::logger.debug "#{token_to_delete.user_id}"
+Rails::logger.debug "#{token_to_delete.time_till_expiration}"
+
     token_to_delete.update(expiration_date: DateTime.current)
+Rails::logger.debug "updated: #{token_to_delete.time_till_expiration}"
 
     render json: { result: "successfully deleted token" } and return
   end
@@ -64,7 +71,7 @@ class Uimp::AuthenticationController < ApplicationController
 
   private
   def valid_credentials?(info={})
-    (Token.exists? info[:token]) || (User.valid_login? info[:user_id], info[:password])
+    (Token.exists? access_token: info[:token]) || (User.valid_login? info[:user_id], info[:password])
   end
 
 end
