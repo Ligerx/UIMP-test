@@ -48,13 +48,8 @@ class Uimp::AuthenticationController < ApplicationController
 
     # IF one of these things, then render
     # token_to_delete.destroy
-Rails::logger.debug "Interesting stuff"
-Rails::logger.debug "#{token_to_delete.user_id}"
-Rails::logger.debug "#{token_to_delete.time_till_expiration}"
-
     token_to_delete.update(expiration_date: DateTime.current)
-Rails::logger.debug "updated: #{token_to_delete.time_till_expiration}"
-
+    
     render json: { result: "successfully deleted token" } and return
   end
 

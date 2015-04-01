@@ -41,15 +41,16 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     test_token2 = Token.create(user_id: 'test')
 
     @request.headers["uimp-token"] = test_token1.access_token
-    delete :destroy_token, params: {id: test_token2.id}
-Rails::logger.debug "in test: #{test_token2.time_till_expiration}"
-
+    delete :destroy_token, id: test_token2.id
 
     json = get_json_from @response.body
 
     assert_equal "successfully deleted token", json['result'], "#{json['error_description']}"
-    assert test_token2.expired?, "#{test_token2.time_till_expiration}"
-    #assert false
+
+    # IMPORTANT: ActiveRecord instances are not kept in sync with each other or the database.
+    # Updating the token by passing its id into the delete_token action changes the db, but not this instance.
+    # To make this instance reflect changes, you must call .reload on it
+    assert test_token2.reload.expired?, "token time till expiration: #{test_token2.time_till_expiration}"
   end
 
 
