@@ -25,6 +25,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   end
 
 
+
   test "should create new token" do
     post :create_token, {user_id: 'Alex@test.com', password:'password'}
     assert_response :success
@@ -35,6 +36,31 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     assert_in_delta 36000, json['expires_in'], 1
   end
 
+  test "should not create new token" do
+    post :create_token, {user_id: 'Alex@test.com', password:'wrong-password'}
+    assert_response :success
+
+    json = get_json_from @response.body
+
+    assert_nil json['access_token']
+    assert_equal "failed", json['result']
+  end
+
+
+
+  test "should delete token given itself" do
+    test_token = tokens(:one)
+
+    @request.headers["uimp-token"] = test_token.access_token
+    delete :destroy_token, id: test_token.id
+
+    json = get_json_from @response.body
+
+    assert_equal "successfully deleted token", json['result'], "#{json['error_description']}"
+
+    # See message in "should destroy token 2 given token 1" test
+    assert test_token.reload.expired?, "token time till expiration: #{test_token.time_till_expiration}"
+  end
 
   test "should destroy token 2 given token 1" do
     test_token1 = Token.create(user_id: 'test')
@@ -53,6 +79,32 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     assert test_token2.reload.expired?, "token time till expiration: #{test_token2.time_till_expiration}"
   end
 
+  test "should not destroy tokens" do
+    @request.headers["uimp-token"] = "not-a-token"
+    delete :destroy_token, id: 1
+    json = get_json_from @response.body
+    assert_equal "Invalid access token", json['error_description']
+
+
+    @request.headers["uimp-token"] = tokens(:one).access_token
+    delete :destroy_token, id: -1 #Token shouldn't exist
+    json = get_json_from @response.body
+    assert_equal "Token not found", json['error_description']
+
+
+    @request.headers["uimp-token"] = tokens(:one).access_token
+    delete :destroy_token, id: tokens(:two).id #Token should have different users
+    json = get_json_from @response.body
+    assert_equal "User mismatch", json['error_description']
+
+
+    @request.headers["uimp-token"] = tokens(:three).access_token
+    delete :destroy_token, id: tokens(:three).id #Token should be expired
+    json = get_json_from @response.body
+    assert_equal "Already expired", json['error_description']
+  end
+
+
 
   test "should show active tokens" do
     get :active_tokens
@@ -66,6 +118,8 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
       assert_equal 128, t.length
     end
   end
+
+
 
   test "should show valid_credentials works" do
     controller = Uimp::AuthenticationController.new

@@ -14,14 +14,15 @@ class Uimp::AuthenticationController < ApplicationController
 
 
   def create_token
-    return unless valid_credentials?(user_id: params[:user_id], password: params[:password])
-
-    # add new token to db
-    # Based on the spec document, tokens taken user_id, but devise uses email by default
-    # I'll just work with both standards right now
-    token = Token.create(user_id: params[:user_id])
-
-    render json: { access_token: token.access_token, expires_in: token.time_till_expiration }
+    if valid_credentials?(user_id: params[:user_id], password: params[:password])
+      # add new token to db
+      # Based on the spec document, tokens taken user_id, but devise uses email by default
+      # I'll just work with both standards right now
+      token = Token.create(user_id: params[:user_id])
+      render json: { access_token: token.access_token, expires_in: token.time_till_expiration }
+    else
+      render json: { result: "failed", error_code: -5, error_description: "Invalid login" } and return
+    end
   end
 
 
@@ -36,7 +37,7 @@ class Uimp::AuthenticationController < ApplicationController
     end
 
     header_token = Token.find_by_access_token(header_token)
-    token_to_delete = Token.find(params[:id])
+    token_to_delete = Token.find_by_id(params[:id])
 
     if token_to_delete.nil?
       render json: { result: "failed", error_code: -3, error_description: "Token not found" } and return

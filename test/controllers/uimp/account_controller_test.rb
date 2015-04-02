@@ -9,9 +9,9 @@ class Uimp::AccountControllerTest < ActionController::TestCase
     assert_response :success
 
     user = users(:Alex)
-    sign_in user
+    # sign_in user
 
-    assert user.valid_password? 'new_password'
+    assert user.valid_password?('new_password'), "#{get_json_from @response.body}"
     assert_not user.valid_password? 'password'
   end
 
