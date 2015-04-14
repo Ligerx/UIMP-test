@@ -1,5 +1,9 @@
 class Uimp::AccountController < ApplicationController
 
+  def create_account
+
+  end
+
   def change_password
     user = find_user
 
@@ -12,7 +16,14 @@ class Uimp::AccountController < ApplicationController
     else
       render json: {error_code: 3, error_description: "Error updating password"} and return
     end
+  end
 
+  def request_password_recovery
+    
+  end
+
+  def update_account
+    
   end
 
 

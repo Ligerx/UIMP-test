@@ -44,4 +44,34 @@ class Uimp::AccountControllerTest < ActionController::TestCase
     assert_not user.valid_password? 'new_password'
   end
 
+
+  test "should be able to create a new account" do
+    # ignore extraneous info? sort of like strong parameters
+    flunk
+  end
+
+  test "should not create account given bad incomplete info" do
+    flunk
+  end
+
+
+  test "should give instructions on recovering password" do
+    # this is currently a post
+    # should this become a get?
+    flunk
+  end
+
+  test "should update account info" do
+    # ignore invalid info
+    flunk
+  end
+
+  test "should not update account info if given bad token" do
+    flunk
+  end
+
+  test "should not update account info if info raises validation error" do
+    flunk
+  end
+
 end
