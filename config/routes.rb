@@ -15,7 +15,7 @@ UIMPTest::Application.routes.draw do
     get  "authentication/tokens", to: "authentication#active_tokens"
 
     post "account", to: "account#create_account"
-    post "account/change_password", to: "account#change_password"
+    put "account/change_password", to: "account#change_password"
     post "account/password/recover", to: "account#request_password_recovery"
     put  "account", to: "account#update_account"
   end

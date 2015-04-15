@@ -46,12 +46,25 @@ class Uimp::AccountControllerTest < ActionController::TestCase
 
 
   test "should be able to create a new account" do
-    # ignore extraneous info? sort of like strong parameters
-    flunk
+    account_params = {email: 'all_fields@gmail.com', password: 'password', password_confirmation: 'password'}
+    post :create_account, account_params
+    assert_response :success
+
+
+    ### Default behavior for strong parameters is to raise error when given extra fields
+    ### You can disable this with an environment setting, but this behavior is not really super necessary
+    ## ignore extraneous info? sort of like strong parameters
+    # extraneous_fields = User.new(email: 'extraneous@gmail.com', password: 'password', password_confirmation: 'password', username: 'tim', active: false)
+    # extraneous_fields.valid?
   end
 
   test "should not create account given bad incomplete info" do
-    flunk
+    post :create_account, { password_confirmation: 'password' }
+    assert_response :success #should these error pages be succeeding? I believe so?
+
+    json = get_json_from @response.body
+    assert_not_nil json['error_code']
+    assert_not_nil json['error_description']
   end
 
 

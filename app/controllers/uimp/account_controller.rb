@@ -1,7 +1,15 @@
 class Uimp::AccountController < ApplicationController
 
   def create_account
+    @new_user = User.new(create_account_params)
 
+    if @new_user.save
+      # not sure how to redirect to additional login procedures
+      # this site's simple login does not have this functionality
+      render json: { redirect_url: root_url }
+    else
+      render json: { redirect_url: root_url, error_code: 1, error_description: "Unable to create account with the given information" }
+    end
   end
 
   def change_password
@@ -28,6 +36,10 @@ class Uimp::AccountController < ApplicationController
 
 
   private
+  def create_account_params
+    params.permit(:email, :password, :password_confirmation)
+  end
+
   def change_password_params
     params.permit(:access_token, :password, :user_id, :old_password, :new_password)
   end
