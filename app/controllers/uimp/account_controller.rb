@@ -34,39 +34,23 @@ class Uimp::AccountController < ApplicationController
 
 
   def update_account
+    ### Only takes an access token as authentication
     ### This will be strictly not for changing password
     # Do I also need to update token user_ids to match changes in email?
     user = find_user
-puts user.attributes
     if user.nil?
-puts "user nil"
       render json: {error_code: 2, error_description: "Invalid credentials"} and return
     end
-# puts params
-# puts authentication_params
-# puts update_params
-# user.email = params['email']
-# puts user.valid?
     update_params.each do |k,v|
-      puts "#{k.to_s}="
-      user.send("#{k.to_s}=", v)
+      user.send("#{k.to_s}=", v) #potential security problem?
     end
 
-    puts user.valid?
     if user.valid?
       user.save
       render json: {}
     else
       render json: {error_code: 4, error_description: "Error updating account info"}
     end
-
-#     if user.update(update_params)
-# puts "updated successfully"
-#       render json: {}
-#     else
-# puts "failed update"
-#       render json: {error_code: 4, error_description: "Error updating account info"}
-#     end
   end
 
 

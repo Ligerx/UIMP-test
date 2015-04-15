@@ -83,21 +83,25 @@ class Uimp::AccountControllerTest < ActionController::TestCase
     assert_not_nil json['instruction']
   end
 
+
   test "should update account info given a token" do
-    put :update_account, {email: "new-username", access_token: tokens(:one).access_token}
+    put :update_account, {email: "new-username@gmail.com", access_token: tokens(:one).access_token}
     assert_response :success
 
     # assert_raises ActiveRecord::RecordNotFound, User.find_by_email("Alex@test.com")
     # assert_equal "new-username", User.find_by_email("new-username").email
-    assert_equal "new-username", users(:Alex).email
+    assert_equal "new-username@gmail.com", users(:Alex).email
     # flunk
   end
 
   test "should not update account info if given bad token" do
-    flunk
+    put :update_account, {email: "new-username@gmail.com", access_token: tokens(:three).access_token}
+    assert_response :success
+
+    assert_not_equal "new-username@gmail.com", users(:Bob).email
   end
 
-  ### Don't need to test this right now because User has no email validations
+  ### Don't need to test this right now because User has no validations
   # test "should not update account info if info raises validation error" do
   #   flunk
   # end
