@@ -50,6 +50,8 @@ class Uimp::AccountControllerTest < ActionController::TestCase
     post :create_account, account_params
     assert_response :success
 
+    assert_includes User.all.to_a.map(&:email), "all_fields@gmail.com"
+
 
     ### Default behavior for strong parameters is to raise error when given extra fields
     ### You can disable this with an environment setting, but this behavior is not really super necessary
@@ -71,20 +73,33 @@ class Uimp::AccountControllerTest < ActionController::TestCase
   test "should give instructions on recovering password" do
     # this is currently a post
     # should this become a get?
-    flunk
+
+    # also, where what do I do about the instructions?
+    # Are they supposed to be stored in the same place as the rest of the errors?
+    post :request_password_recovery
+    assert_response :success
+
+    json = get_json_from @response.body
+    assert_not_nil json['instruction']
   end
 
-  test "should update account info" do
-    # ignore invalid info
-    flunk
+  test "should update account info given a token" do
+    put :update_account, {email: "new-username", access_token: tokens(:one).access_token}
+    assert_response :success
+
+    # assert_raises ActiveRecord::RecordNotFound, User.find_by_email("Alex@test.com")
+    # assert_equal "new-username", User.find_by_email("new-username").email
+    assert_equal "new-username", users(:Alex).email
+    # flunk
   end
 
   test "should not update account info if given bad token" do
     flunk
   end
 
-  test "should not update account info if info raises validation error" do
-    flunk
-  end
+  ### Don't need to test this right now because User has no email validations
+  # test "should not update account info if info raises validation error" do
+  #   flunk
+  # end
 
 end

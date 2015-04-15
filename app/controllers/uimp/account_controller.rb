@@ -12,6 +12,7 @@ class Uimp::AccountController < ApplicationController
     end
   end
 
+
   def change_password
     user = find_user
 
@@ -26,13 +27,48 @@ class Uimp::AccountController < ApplicationController
     end
   end
 
+
   def request_password_recovery
-    
+    render json: {instruction: "Go to the website's login page"}
   end
 
+
   def update_account
-    
+    ### This will be strictly not for changing password
+    # Do I also need to update token user_ids to match changes in email?
+    user = find_user
+puts user.attributes
+    if user.nil?
+puts "user nil"
+      render json: {error_code: 2, error_description: "Invalid credentials"} and return
+    end
+# puts params
+# puts authentication_params
+# puts update_params
+# user.email = params['email']
+# puts user.valid?
+    update_params.each do |k,v|
+      puts "#{k.to_s}="
+      user.send("#{k.to_s}=", v)
+    end
+
+    puts user.valid?
+    if user.valid?
+      user.save
+      render json: {}
+    else
+      render json: {error_code: 4, error_description: "Error updating account info"}
+    end
+
+#     if user.update(update_params)
+# puts "updated successfully"
+#       render json: {}
+#     else
+# puts "failed update"
+#       render json: {error_code: 4, error_description: "Error updating account info"}
+#     end
   end
+
 
 
   private
@@ -40,19 +76,25 @@ class Uimp::AccountController < ApplicationController
     params.permit(:email, :password, :password_confirmation)
   end
 
-  def change_password_params
+  def authentication_params
     params.permit(:access_token, :password, :user_id, :old_password, :new_password)
   end
 
+  def update_params
+    # right now email is the only other field from password
+    # authentication_params.permit(:email)
+    params.permit(:email)
+  end
+
   def find_user
-    token_param = change_password_params[:access_token]
-    email_param = change_password_params[:user_id]
-    email_old_password = change_password_params[:old_password]
+    token_param = authentication_params[:access_token]
+    email_param = authentication_params[:user_id]
+    email_old_password = authentication_params[:old_password]
 
     if token_param
       # Check for a non expired token, and then find its user
       token = Token.find_by_access_token(token_param)
-      @new_password = change_password_params[:password]
+      @new_password = authentication_params[:password]
 
       return nil if token.nil? || token.expired?
 
@@ -61,7 +103,7 @@ class Uimp::AccountController < ApplicationController
     elsif email_param && email_old_password
       # Find a user and check that user exists and has the right password
       user = User.find_by_email(email_param)
-      @new_password = change_password_params[:new_password]
+      @new_password = authentication_params[:new_password]
 
       return nil if user.nil? || !user.valid_password?(email_old_password)
 
