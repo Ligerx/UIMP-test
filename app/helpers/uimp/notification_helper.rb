@@ -1,0 +1,2 @@
+module Uimp::NotificationHelper
+end

@@ -18,6 +18,8 @@ UIMPTest::Application.routes.draw do
     put "account/change_password", to: "account#change_password"
     post "account/password/recover", to: "account#request_password_recovery"
     put  "account", to: "account#update_account"
+
+    
   end
 
 
