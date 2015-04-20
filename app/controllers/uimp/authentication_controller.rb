@@ -1,5 +1,6 @@
 class Uimp::AuthenticationController < ApplicationController
   require 'date'
+  layout false
 
   def login
     if valid_credentials?(user_id: params[:user_id], password: params[:password])

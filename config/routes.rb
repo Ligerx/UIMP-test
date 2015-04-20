@@ -19,7 +19,9 @@ UIMPTest::Application.routes.draw do
     post "account/password/recover", to: "account#request_password_recovery"
     put  "account", to: "account#update_account"
 
-    
+    post "notification/entries", to: 'notification#create_entry'
+    delete 'notification/entries/:id', to: 'notification#destroy_entry'
+    get 'notification/entries', to: 'notification#show_entries'
   end
 
 
