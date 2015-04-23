@@ -1,4 +1,4 @@
-class Uimp::Notification < ActiveRecord::Base
+class Notification < ActiveRecord::Base
   belongs_to :user
 
   # does not include the <UIMP API name> events right now

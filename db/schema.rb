@@ -11,21 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420042518) do
+ActiveRecord::Schema.define(version: 20150423051339) do
+
+  create_table "notifications", force: true do |t|
+    t.integer  "user_id"
+    t.string   "event"
+    t.string   "medium_type"
+    t.string   "medium_information"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "tokens", force: true do |t|
     t.string   "access_token"
     t.string   "user_id"
     t.datetime "expiration_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "uimp_notifications", force: true do |t|
-    t.integer  "user_id"
-    t.string   "event"
-    t.string   "medium_type"
-    t.string   "medium_information"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
