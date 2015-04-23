@@ -20,10 +20,6 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
     flunk
   end
 
-  test "ALL possible events" do
-    flunk
-  end
-
 
 
   test "should destroy entry" do
