@@ -15,7 +15,7 @@ class Uimp::AccountController < ApplicationController
 
 
   def change_password
-    user = find_user(params)
+    user = find_user(params, request)
 
     if user.nil?
       render json: {error_code: 2, error_description: "Invalid credentials"} and return
@@ -38,7 +38,7 @@ class Uimp::AccountController < ApplicationController
     ### Only takes an access token as authentication
     ### This will be strictly not for changing password
     # Do I also need to update token user_ids to match changes in email?
-    user = find_user(params)
+    user = find_user(params, request)
     if user.nil?
       render json: {error_code: 2, error_description: "Invalid credentials"} and return
     end

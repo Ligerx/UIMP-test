@@ -4,8 +4,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
 
-  def find_user(params)
-    token_param = params[:access_token]
+  def find_user(params, request = nil)
+    token_param = request.headers['uimp-token'] unless request.nil?
     email_param = params[:user_id]
     email_old_password = params[:old_password]
 

@@ -63,6 +63,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   end
 
   test "should destroy token 2 given token 1" do
+    flunk#make use find_user
     test_token1 = Token.create(user_id: 'test')
     test_token2 = Token.create(user_id: 'test')
 
@@ -80,6 +81,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   end
 
   test "should not destroy tokens" do
+    flunk#use find_user
     @request.headers["uimp-token"] = "not-a-token"
     delete :destroy_token, id: 1
     json = get_json_from @response.body

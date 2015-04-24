@@ -14,7 +14,8 @@ class Uimp::AccountControllerTest < ActionController::TestCase
   end
 
   test "should change password with token" do
-    put :change_password, {access_token: tokens(:one).access_token, password: 'new_password'}
+    @request.headers['uimp-token'] = tokens(:one).access_token
+    put :change_password, {password: 'new_password'}
     assert_response :success
 
     user = users(:Alex)
@@ -85,7 +86,8 @@ class Uimp::AccountControllerTest < ActionController::TestCase
 
 
   test "should update account info given a token" do
-    put :update_account, {email: "new-username@gmail.com", access_token: tokens(:one).access_token}
+    @request.headers['uimp-token'] = tokens(:one).access_token
+    put :update_account, {email: "new-username@gmail.com"}
     assert_response :success
 
     # assert_raises ActiveRecord::RecordNotFound, User.find_by_email("Alex@test.com")

@@ -2,12 +2,13 @@ class Uimp::NotificationController < ApplicationController
   layout false
 
   def create_entry
-    user = find_user(params)
+    user = find_user(params, request)
     if user.nil?
       render json: { something: "RENDERERERERERE" } and return
     end
 
     new_notification = Notification.new(notification_params)
+    new_notification.user = user
 
     if new_notification.save
       render json: {} and return
@@ -56,7 +57,8 @@ class Uimp::NotificationController < ApplicationController
 
   private
   def notification_params
-    params.require(:notification).permit(:event, :medium_type, :medium_information)
+    # params.require(:notification).permit(:event, :medium_type, :medium_information)
+    params.permit(:event, :medium_type, :medium_information)
   end
 
 end
