@@ -21,13 +21,13 @@ class Uimp::NotificationController < ApplicationController
     # ids are retrieved from the notification entries list
 
     # side note: remember to change the http codes for errors.
-    user = find_user(params)
+    user = find_user(params, request)
 
     if user.nil?
       render json: { something: "RENDERERERERERE" } and return
     end
 
-    entry = Notification.find_by_user(user).find(params[:id])
+    entry = Notification.where(user: user).find_by(id: params[:id])
 
     if entry.nil?
       render json: {} and return
@@ -40,16 +40,16 @@ class Uimp::NotificationController < ApplicationController
 
   def show_entries
     # I'm assuming you can only see notifications for your own account
-    user = find_user(params)
+    user = find_user(params, request)
     if user.nil?
       render json: { something: "RENDER SOMETHING HERE" } and return
     end
 
-    user_notifications = Notification.find_by_user(user).to_a
+    user_notifications = Notification.where(user: user).to_a
 
-    json_info = {}
+    json_info = { notification_entry_list: Array.new }
     user_notifications.each do |n|
-      json_info[n.created_at] = { event: n.event, medium_type: n.medium_type, medium_information: n.medium_information }
+      json_info[:notification_entry_list] << { id: n.id, event: n.event, 'medium' => n.medium_type, medium_information: n.medium_information }
     end
 
     render json: json_info and return

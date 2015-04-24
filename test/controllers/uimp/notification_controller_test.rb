@@ -10,34 +10,72 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
     assert_response :success
 
     assert_equal count+1, Notification.count
-  end
 
-  test "not able to create entry with invalid token" do
-    flunk
+    user = users(:Alex)
+    notif = Notification.where(user: user).last #should be the one created above
+    assert_equal 'login_success', notif.event
+    assert_equal 'email', notif.medium_type
+    assert_equal 'Alex@test.com', notif.medium_information
   end
 
   test "not able to create entry with invalid inforamtion" do
-    flunk
+    count = Notification.count
+
+    @request.headers['uimp-token'] = tokens(:one).access_token
+    post :create_entry, { event: 'not-an-event', medium_type: 'email', medium_information: 'Alex@test.com' }
+    assert_response :success
+    assert_equal count, Notification.count
+
+    post :create_entry, { event: 'login_success', medium_type: 'not-a-medium', medium_information: 'Alex@test.com' }
+    assert_response :success
+    assert_equal count, Notification.count
+
+    ### No validation on email yet
+    # post :create_entry, { event: 'login_success', medium_type: 'email', medium_information: 'not-an-email' }
+    # assert_response :success
+    # assert_equal count, Notification.count
   end
 
 
 
   test "should destroy entry" do
-    flunk
-  end
+    notif = notifications(:one)
+    assert Notification.exists? notif
 
-  test "should not destroy entry given invalid token" do
-    flunk
+    @request.headers['uimp-token'] = tokens(:one).access_token
+    delete :destroy_entry, { id: notif.id }
+
+    assert_not Notification.exists? notif
   end
 
   test "should not destroy entry given non existant id" do
-    flunk
+    notif = notifications(:one)
+
+    @request.headers['uimp-token'] = tokens(:one).access_token
+    
+    # route :id without ( ) makes id mandatory
+    # so, don't need to test missing id
+    delete :destroy_entry, { id: 5000 }
+    assert Notification.exists? notif
   end
 
 
 
   test "should show list of entries" do
-    flunk
+    @request.headers['uimp-token'] = tokens(:one).access_token
+    get :show_entries
+
+    json = get_json_from @response.body
+    list = json['notification_entry_list']
+
+    # only show the 1 notification belonging to this token's user
+    assert_equal 1, list.size
+
+    notif_1_info = { 'id' => notifications(:one).id, 'event' => 'login_success', 'medium' => 'email', 'medium_information' => 'Alex@test.com' }
+    assert_equal notif_1_info, list[0]
+
+    # notif_2_info = { 'id' => notifications(:two).id, 'event' => 'service_information', 'medium' => 'sms', 'medium_information' => '1112223333' }
+    # assert_equal notif_2_info, list[1]
   end
 
 end

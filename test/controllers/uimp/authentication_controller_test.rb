@@ -114,7 +114,8 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
     json = get_json_from @response.body
 
-    assert_equal 2, json['access_token_list'].size
+    # size is 1, not 2, because it is for this particular user
+    assert_equal 1, json['access_token_list'].size
 
     json['access_token_list'].each do |t|
       assert_equal 128, t.length
@@ -130,6 +131,14 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
     assert_not controller.send(:valid_credentials?, {token: "aaaaaaaaaaaaaaa"})
     assert_not controller.send(:valid_credentials?, {user_id: "Alex@test.com", password: "wrong-password"})
+  end
+
+
+
+
+
+  test "need to fix user_id so that it is actually a relation" do
+    flunk
   end
 
 end

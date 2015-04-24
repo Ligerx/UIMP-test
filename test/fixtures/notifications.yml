@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user_id: 1
-  event: MyString
-  medium_type: MyString
-  medium_information: MyString
+  user: Alex
+  event: login_success
+  medium_type: email
+  medium_information: Alex@test.com
 
 two:
-  user_id: 1
-  event: MyString
-  medium_type: MyString
-  medium_information: MyString
+  user: Bob
+  event: service_information
+  medium_type: sms
+  medium_information: 1112223333
