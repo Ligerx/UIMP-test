@@ -2,11 +2,10 @@ class Uimp::AuthenticationController < ApplicationController
   layout false
 
   def login
-    if valid_credentials?(user_id: params[:user_id], password: params[:password])
+    # if valid_credentials?(user_id: params[:user_id], password: params[:password])
+    if find_user_by_params_login(params)
       resource = User.find_by_email(params[:user_id])
       sign_in_and_redirect(resource) # can use sign_in_and_redirect, but this is not what the UIMP api specifies
-
-      # resource.ensure_authentication_token!
     else
       render json: { error_code: 1, error_description: "Invalid login" }
     end
@@ -14,7 +13,8 @@ class Uimp::AuthenticationController < ApplicationController
 
 
   def create_token
-    if valid_credentials?(user_id: params[:user_id], password: params[:password])
+    # if valid_credentials?(user_id: params[:user_id], password: params[:password])
+    if find_user_by_params_login(params)
       # add new token to db
       # Based on the spec document, tokens taken user_id, but devise uses email by default
       # I'll just work with both standards right now
@@ -32,7 +32,7 @@ class Uimp::AuthenticationController < ApplicationController
     # The id passed is the token to be deleted
 
     # unless valid_credentials?(token: header_token)
-    if find_user(params, request).nil?
+    if find_user_by_request_token(request).nil?
       render json: { result: "failed", error_code: -4, error_description: "Invalid access token" } and return
     end
 
@@ -57,7 +57,7 @@ class Uimp::AuthenticationController < ApplicationController
 
 
   def active_tokens
-    user = find_user(params, request)
+    user = find_user_by_request_token(request)
 
     access_tokens_array = Array.new
 

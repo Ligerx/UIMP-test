@@ -2,7 +2,7 @@ class Uimp::NotificationController < ApplicationController
   layout false
 
   def create_entry
-    user = find_user(params, request)
+    user = find_user_by_request_token(request)
     if user.nil?
       render json: { something: "RENDERERERERERE" } and return
     end
@@ -21,7 +21,7 @@ class Uimp::NotificationController < ApplicationController
     # ids are retrieved from the notification entries list
 
     # side note: remember to change the http codes for errors.
-    user = find_user(params, request)
+    user = find_user_by_request_token(request)
 
     if user.nil?
       render json: { something: "RENDERERERERERE" } and return
@@ -40,7 +40,7 @@ class Uimp::NotificationController < ApplicationController
 
   def show_entries
     # I'm assuming you can only see notifications for your own account
-    user = find_user(params, request)
+    user = find_user_by_request_token(request)
     if user.nil?
       render json: { something: "RENDER SOMETHING HERE" } and return
     end

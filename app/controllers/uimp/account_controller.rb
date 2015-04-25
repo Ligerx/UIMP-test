@@ -15,13 +15,13 @@ class Uimp::AccountController < ApplicationController
 
 
   def change_password
-    user = find_user(params, request)
-
+    user = find_user_from_token_or_login(params, request)
+    
     if user.nil?
       render json: {error_code: 2, error_description: "Invalid credentials"} and return
     end
 
-    if user.update(password: @new_password)
+    if user.update(password: params[:new_password])
       render json: {} and return
     else
       render json: {error_code: 3, error_description: "Error updating password"} and return
@@ -38,7 +38,7 @@ class Uimp::AccountController < ApplicationController
     ### Only takes an access token as authentication
     ### This will be strictly not for changing password
     # Do I also need to update token user_ids to match changes in email?
-    user = find_user(params, request)
+    user = find_user_by_request_token(request)
     if user.nil?
       render json: {error_code: 2, error_description: "Invalid credentials"} and return
     end
@@ -65,6 +65,27 @@ class Uimp::AccountController < ApplicationController
     # right now email is the only other field from password
     # authentication_params.permit(:email)
     params.permit(:email)
+  end
+
+  def find_user_from_token_or_login(params, request)
+    edit_params_if_changing_password_with_login
+
+    user = find_user_by_request_token(request)
+    user = find_user_by_params_login(params) if user.nil?
+
+    return user
+  end
+
+  def edit_params_if_changing_password_with_login
+    if params[:password]
+      # If given a token, the new password is named password
+      # Change this to new_password
+      params[:new_password] = params.delete(:password)
+    else
+      # if given login info, we have old_password and new_password
+      # Change old_password to password
+      params[:password] = params.delete(:old_password)
+    end
   end
 
 end
