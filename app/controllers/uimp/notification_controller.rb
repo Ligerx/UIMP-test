@@ -19,8 +19,6 @@ class Uimp::NotificationController < ApplicationController
 
   def destroy_entry
     # ids are retrieved from the notification entries list
-
-    # side note: remember to change the http codes for errors.
     user = find_user_by_request_token(request)
 
     if user.nil?
@@ -49,7 +47,10 @@ class Uimp::NotificationController < ApplicationController
 
     json_info = { notification_entry_list: Array.new }
     user_notifications.each do |n|
-      json_info[:notification_entry_list] << { id: n.id, event: n.event, 'medium' => n.medium_type, medium_information: n.medium_information }
+      json_info[:notification_entry_list] << { id: n.id,
+                                               event: n.event,
+                                              'medium' => n.medium_type,
+                                               medium_information: n.medium_information }
     end
 
     render json: json_info and return
@@ -57,7 +58,6 @@ class Uimp::NotificationController < ApplicationController
 
   private
   def notification_params
-    # params.require(:notification).permit(:event, :medium_type, :medium_information)
     params.permit(:event, :medium_type, :medium_information)
   end
 

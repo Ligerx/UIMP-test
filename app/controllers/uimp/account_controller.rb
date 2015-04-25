@@ -42,12 +42,8 @@ class Uimp::AccountController < ApplicationController
     if user.nil?
       render json: {error_code: 2, error_description: "Invalid credentials"} and return
     end
-    update_params.each do |k,v|
-      user.send("#{k.to_s}=", v) #potential security problem?
-    end
 
-    if user.valid?
-      user.save
+    if user.update(update_params)
       render json: {}
     else
       render json: {error_code: 4, error_description: "Error updating account info"}
