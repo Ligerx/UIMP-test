@@ -15,3 +15,8 @@ three:
   access_token: <%= 128.times.map {|i| [*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join %>
   user: Bob
   expiration_date: <%= 10.minutes.ago.to_datetime %>
+
+four:
+  access_token: <%= 128.times.map {|i| [*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join %>
+  user: Bob
+  expiration_date: <%= 10.minutes.from_now.to_datetime %>

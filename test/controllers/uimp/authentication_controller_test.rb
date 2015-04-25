@@ -118,8 +118,9 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
     json = get_json_from @response.body
 
-    # size is 1, not 2, because it is for this particular user
-    assert_equal 1, json['access_token_list'].size
+    # Tokens for this particular user
+    # 2 active tokens, 1 inactive token which is not included
+    assert_equal 2, json['access_token_list'].size
 
     json['access_token_list'].each do |t|
       assert_equal 128, t.length
