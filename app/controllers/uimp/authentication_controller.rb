@@ -31,18 +31,19 @@ class Uimp::AuthenticationController < ApplicationController
     # The access token should be passed in the header
     # The header token checks the validity of the action
     # The id passed is the token to be deleted
-    header_token = request.headers["uimp-token"]
 
-    unless valid_credentials?(token: header_token)
+    # unless valid_credentials?(token: header_token)
+    if find_user(params, request).nil?
       render json: { result: "failed", error_code: -4, error_description: "Invalid access token" } and return
     end
 
-    header_token = Token.find_by_access_token(header_token)
+    header_token = request.headers["uimp-token"]
+    token = Token.find_by_access_token(header_token)
     token_to_delete = Token.find_by_id(params[:id])
 
     if token_to_delete.nil?
       render json: { result: "failed", error_code: -3, error_description: "Token not found" } and return
-    elsif header_token.user_id != token_to_delete.user_id
+    elsif token.user_id != token_to_delete.user_id
       render json: { result: "failed", error_code: -2, error_description: "User mismatch" } and return
     elsif token_to_delete.time_till_expiration < 0
       render json: { result: "failed", error_code: -1, error_description: "Already expired" } and return
@@ -59,8 +60,12 @@ class Uimp::AuthenticationController < ApplicationController
   def active_tokens
     user = find_user(params, request)
 
+    access_tokens_array = Array.new
+
     active_token_records = Token.where(user_id: user.id).valid.to_a
-    access_tokens_array = active_token_records.map { |t| t.access_token }
+    active_token_records.each do |t|
+      access_tokens_array << {'id' => t.id, 'access_token' => t.access_token}
+    end
 
     token_map = { access_token_list: access_tokens_array }
     render json: token_map and return

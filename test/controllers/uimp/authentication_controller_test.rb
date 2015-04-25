@@ -63,9 +63,6 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   end
 
   test "should destroy token 2 given token 1" do
-    flunk#make use find_user
-    # test_token1 = Token.create(user_id: 'test')
-    # test_token2 = Token.create(user_id: 'test')
     user = users(:Alex).id
     test_token1 = Token.create(user_id: user)
     test_token2 = Token.create(user_id: user)
@@ -84,9 +81,8 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   end
 
   test "should not destroy tokens" do
-    flunk#use find_user
     @request.headers["uimp-token"] = "not-a-token"
-    delete :destroy_token, id: 1
+    delete :destroy_token, id: tokens(:one).id
     json = get_json_from @response.body
     assert_equal "Invalid access token", json['error_description']
 
@@ -106,12 +102,13 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     @request.headers["uimp-token"] = tokens(:three).access_token
     delete :destroy_token, id: tokens(:three).id #Token should be expired
     json = get_json_from @response.body
-    assert_equal "Already expired", json['error_description']
+    assert_equal "Invalid access token", json['error_description']
   end
 
 
 
   test "should show active tokens" do
+    # flunk # reformat the output to be correct json
     @request.headers["uimp-token"] = tokens(:two).access_token
     get :active_tokens
     assert_response :success
@@ -123,28 +120,21 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     assert_equal 2, json['access_token_list'].size
 
     json['access_token_list'].each do |t|
-      assert_equal 128, t.length
+      assert_not_nil t['id']
+      assert_equal 128, t['access_token'].length
     end
   end
 
 
 
   test "should show valid_credentials works" do
-    user = users(:Alex).id
+    user = users(:Alex)
     controller = Uimp::AuthenticationController.new
     assert controller.send(:valid_credentials?, {token: tokens(:one).access_token})
-    assert controller.send(:valid_credentials?, {user_id: user, password: "password"})
+    assert controller.send(:valid_credentials?, {user_id: user.email, password: "password"})
 
     assert_not controller.send(:valid_credentials?, {token: "aaaaaaaaaaaaaaa"})
-    assert_not controller.send(:valid_credentials?, {user_id: user, password: "wrong-password"})
-  end
-
-
-
-
-
-  test "need to fix user_id so that it is actually a relation" do
-    flunk
+    assert_not controller.send(:valid_credentials?, {user_id: user.email, password: "wrong-password"})
   end
 
 end
