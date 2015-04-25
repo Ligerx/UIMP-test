@@ -48,11 +48,11 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
 
 
-  test "should delete token given itself" do
+  test "should delete self token if not given an id" do
     test_token = tokens(:one)
 
     @request.headers["uimp-token"] = test_token.access_token
-    delete :destroy_token, id: test_token.id
+    delete :destroy_token
 
     json = get_json_from @response.body
 

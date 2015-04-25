@@ -11,7 +11,7 @@ UIMPTest::Application.routes.draw do
 
     post "authentication/login", to: "authentication#login"
     post "authentication/tokens", to: "authentication#create_token"
-    delete "authentication/tokens/:id", to: "authentication#destroy_token"
+    delete "authentication/tokens(/:id)", to: "authentication#destroy_token"
     get  "authentication/tokens", to: "authentication#active_tokens"
 
     post "account", to: "account#create_account"

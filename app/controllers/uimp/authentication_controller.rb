@@ -31,18 +31,21 @@ class Uimp::AuthenticationController < ApplicationController
     # The header token checks the validity of the action
     # The id passed is the token to be deleted
 
-    # unless valid_credentials?(token: header_token)
     if find_user_by_request_token(request).nil?
       render json: { result: "failed", error_code: -4, error_description: "Invalid access token" } and return
     end
 
-    header_token = request.headers["uimp-token"]
-    token = Token.find_by_access_token(header_token)
-    token_to_delete = Token.find_by_id(params[:id])
+    header_token_string = request.headers["uimp-token"]
+    header_token = Token.find_by_access_token(header_token_string)
+    token_to_delete = if params[:id]
+                        Token.find_by_id(params[:id])
+                      else
+                        header_token
+                      end
 
     if token_to_delete.nil?
       render json: { result: "failed", error_code: -3, error_description: "Token not found" } and return
-    elsif token.user_id != token_to_delete.user_id
+    elsif header_token.user_id != token_to_delete.user_id
       render json: { result: "failed", error_code: -2, error_description: "User mismatch" } and return
     elsif token_to_delete.time_till_expiration < 0
       render json: { result: "failed", error_code: -1, error_description: "Already expired" } and return
