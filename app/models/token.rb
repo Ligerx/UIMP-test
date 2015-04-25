@@ -1,6 +1,4 @@
 class Token < ActiveRecord::Base
-  require 'date'
-
   # how long a token remains valid in seconds
   VALID_TIME = 36000
 

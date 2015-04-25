@@ -1,5 +1,4 @@
 class Uimp::AuthenticationController < ApplicationController
-  require 'date'
   layout false
 
   def login
