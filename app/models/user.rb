@@ -5,6 +5,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
 
+  has_many :tokens
+  has_many :notifications
+
   scope :find_by_email, ->(input_email) { find_by(email: input_email) }
 
 

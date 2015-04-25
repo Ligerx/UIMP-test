@@ -45,7 +45,7 @@ class Uimp::NotificationController < ApplicationController
       render json: { something: "RENDER SOMETHING HERE" } and return
     end
 
-    user_notifications = Notification.where(user: user).to_a
+    user_notifications = Notification.where(user_id: user.id).to_a
 
     json_info = { notification_entry_list: Array.new }
     user_notifications.each do |n|

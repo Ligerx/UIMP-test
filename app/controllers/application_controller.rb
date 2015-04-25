@@ -16,11 +16,11 @@ class ApplicationController < ActionController::Base
 
       return nil if token.nil? || token.expired?
 
-      return User.find_by_email(token.user_id)
+      return User.find(token.user_id)
 
     elsif email_param && email_old_password
       # Find a user and check that user exists and has the right password
-      user = User.find_by_email(email_param)
+      user = User.find_by(email: email_param)
       @new_password = params[:new_password]
 
       return nil if user.nil? || !user.valid_password?(email_old_password)

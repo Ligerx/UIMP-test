@@ -59,7 +59,7 @@ class Uimp::AuthenticationController < ApplicationController
   def active_tokens
     user = find_user(params, request)
 
-    active_token_records = Token.where(user: user).valid.to_a
+    active_token_records = Token.where(user_id: user.id).valid.to_a
     access_tokens_array = active_token_records.map { |t| t.access_token }
 
     token_map = { access_token_list: access_tokens_array }

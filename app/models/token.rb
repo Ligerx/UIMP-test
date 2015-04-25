@@ -4,6 +4,8 @@ class Token < ActiveRecord::Base
   # how long a token remains valid in seconds
   VALID_TIME = 36000
 
+  belongs_to :user
+
   before_create :generate_access_token, :set_expiration_date
 
   scope :valid, -> { where("expiration_date > ?", DateTime.current) }

@@ -64,8 +64,11 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
   test "should destroy token 2 given token 1" do
     flunk#make use find_user
-    test_token1 = Token.create(user_id: 'test')
-    test_token2 = Token.create(user_id: 'test')
+    # test_token1 = Token.create(user_id: 'test')
+    # test_token2 = Token.create(user_id: 'test')
+    user = users(:Alex).id
+    test_token1 = Token.create(user_id: user)
+    test_token2 = Token.create(user_id: user)
 
     @request.headers["uimp-token"] = test_token1.access_token
     delete :destroy_token, id: test_token2.id
@@ -109,6 +112,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
 
   test "should show active tokens" do
+    @request.headers["uimp-token"] = tokens(:two).access_token
     get :active_tokens
     assert_response :success
 
@@ -125,12 +129,13 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
 
   test "should show valid_credentials works" do
+    user = users(:Alex).id
     controller = Uimp::AuthenticationController.new
     assert controller.send(:valid_credentials?, {token: tokens(:one).access_token})
-    assert controller.send(:valid_credentials?, {user_id: "Alex@test.com", password: "password"})
+    assert controller.send(:valid_credentials?, {user_id: user, password: "password"})
 
     assert_not controller.send(:valid_credentials?, {token: "aaaaaaaaaaaaaaa"})
-    assert_not controller.send(:valid_credentials?, {user_id: "Alex@test.com", password: "wrong-password"})
+    assert_not controller.send(:valid_credentials?, {user_id: user, password: "wrong-password"})
   end
 
 
