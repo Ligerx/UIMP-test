@@ -83,8 +83,9 @@ class ApplicationController < ActionController::Base
     return user
   end
 
-  def user_invalid
-      
+  def render_error(error_array)
+    render json: { error_code: error_array[0],
+                   error_description: error_array[1] }
   end
 
 end

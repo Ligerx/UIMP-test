@@ -1,5 +1,5 @@
 module Errors
-  ERRORS = {
+  ERRORS_LIST = {
             invalid_credentials:            [1, 'Invalid login credentials']
             invalid_token:                  [2, 'Invalid token']
 
