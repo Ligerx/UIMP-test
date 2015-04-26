@@ -47,8 +47,6 @@ class Uimp::AuthenticationController < ApplicationController
       render json: { result: "failed", error_code: -3, error_description: "Token not found" } and return
     elsif header_token.user_id != token_to_delete.user_id
       render json: { result: "failed", error_code: -2, error_description: "User mismatch" } and return
-    elsif token_to_delete.time_till_expiration < 0
-      render json: { result: "failed", error_code: -1, error_description: "Already expired" } and return
     end
 
     # IF one of these things, then render
