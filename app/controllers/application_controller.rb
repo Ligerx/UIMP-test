@@ -88,4 +88,12 @@ class ApplicationController < ActionController::Base
                    error_description: error_array[1] }
   end
 
+  def render_invalid_credentials_error
+    render_error(Errors::LIST[:invalid_credentials])
+  end
+
+  def render_invalid_token_error
+    render_error(Errors::LIST[:invalid_token])
+  end
+
 end

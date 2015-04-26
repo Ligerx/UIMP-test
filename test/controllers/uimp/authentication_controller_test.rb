@@ -20,7 +20,8 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     assert_response :success
 
     json = get_json_from @response.body
-    assert_equal "Invalid login", json['error_description']
+    # assert_equal "Invalid login", json['error_description']
+    assert_equal Errors::LIST[:invalid_credentials][1], json['error_description']
     assert_not warden.authenticated?(:user)
   end
 
@@ -43,7 +44,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     json = get_json_from @response.body
 
     assert_nil json['access_token']
-    assert_equal "failed", json['result']
+    assert_equal Errors::LIST[:invalid_credentials][1], json['error_description']
   end
 
 
@@ -84,25 +85,25 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     @request.headers["uimp-token"] = "not-a-token"
     delete :destroy_token, id: tokens(:one).id
     json = get_json_from @response.body
-    assert_equal "Invalid access token", json['error_description']
+    assert_equal Errors::LIST[:invalid_token][1], json['error_description']
 
 
     @request.headers["uimp-token"] = tokens(:one).access_token
     delete :destroy_token, id: -1 #Token shouldn't exist
     json = get_json_from @response.body
-    assert_equal "Token not found", json['error_description']
+    assert_equal Errors::LIST[:token_to_delete_not_found][1], json['error_description']
 
 
     @request.headers["uimp-token"] = tokens(:one).access_token
     delete :destroy_token, id: tokens(:two).id #Token should have different users
     json = get_json_from @response.body
-    assert_equal "User mismatch", json['error_description']
+    assert_equal Errors::LIST[:token_user_mismatch][1], json['error_description']
 
 
     @request.headers["uimp-token"] = tokens(:three).access_token
     delete :destroy_token, id: tokens(:three).id #Token should be expired
     json = get_json_from @response.body
-    assert_equal "Invalid access token", json['error_description']
+    assert_equal Errors::LIST[:invalid_token][1], json['error_description']
   end
 
 
@@ -123,18 +124,6 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
       assert_not_nil t['id']
       assert_equal 128, t['access_token'].length
     end
-  end
-
-
-
-  test "should show valid_credentials works" do
-    user = users(:Alex)
-    controller = Uimp::AuthenticationController.new
-    assert controller.send(:valid_credentials?, {token: tokens(:one).access_token})
-    assert controller.send(:valid_credentials?, {user_id: user.email, password: "password"})
-
-    assert_not controller.send(:valid_credentials?, {token: "aaaaaaaaaaaaaaa"})
-    assert_not controller.send(:valid_credentials?, {user_id: user.email, password: "wrong-password"})
   end
 
 end

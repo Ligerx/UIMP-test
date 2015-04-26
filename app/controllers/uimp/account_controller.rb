@@ -9,7 +9,7 @@ class Uimp::AccountController < ApplicationController
       # this site's simple login does not have this functionality
       render json: { redirect_url: root_url }
     else
-      render json: { redirect_url: root_url, error_code: 1, error_description: "Unable to create account with the given information" }
+      render_error(Errors::LIST[:unable_to_create_account])
     end
   end
 
