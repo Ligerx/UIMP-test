@@ -16,15 +16,12 @@ class Uimp::AccountController < ApplicationController
 
   def change_password
     user = find_user_from_token_or_login(params, request)
-    
-    if user.nil?
-      render json: {error_code: 2, error_description: "Invalid credentials"} and return
-    end
+    (render_invalid_credentials_error and return) if user.nil? # This could be made to account for both types
 
     if user.update(password: params[:new_password])
       render json: {} and return
     else
-      render json: {error_code: 3, error_description: "Error updating password"} and return
+      render_error(Error::LIST[:unable_to_update_password]) and return
     end
   end
 
@@ -37,16 +34,13 @@ class Uimp::AccountController < ApplicationController
   def update_account
     ### Only takes an access token as authentication
     ### This will be strictly not for changing password
-    # Do I also need to update token user_ids to match changes in email?
     user = find_user_by_request_token(request)
-    if user.nil?
-      render json: {error_code: 2, error_description: "Invalid credentials"} and return
-    end
+    (render_invalid_token_error and return) if user.nil?
 
     if user.update(update_params)
       render json: {}
     else
-      render json: {error_code: 4, error_description: "Error updating account info"}
+      render_error(Errors::LIST[:unable_to_update_account_info])
     end
   end
 
@@ -59,7 +53,6 @@ class Uimp::AccountController < ApplicationController
 
   def update_params
     # right now email is the only other field from password
-    # authentication_params.permit(:email)
     params.permit(:email)
   end
 

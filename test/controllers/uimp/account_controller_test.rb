@@ -52,13 +52,6 @@ class Uimp::AccountControllerTest < ActionController::TestCase
     assert_response :success
 
     assert_includes User.all.to_a.map(&:email), "all_fields@gmail.com"
-
-
-    ### Default behavior for strong parameters is to raise error when given extra fields
-    ### You can disable this with an environment setting, but this behavior is not really super necessary
-    ## ignore extraneous info? sort of like strong parameters
-    # extraneous_fields = User.new(email: 'extraneous@gmail.com', password: 'password', password_confirmation: 'password', username: 'tim', active: false)
-    # extraneous_fields.valid?
   end
 
   test "should not create account given bad incomplete info" do
@@ -66,8 +59,8 @@ class Uimp::AccountControllerTest < ActionController::TestCase
     assert_response :success #should these error pages be succeeding? I believe so?
 
     json = get_json_from @response.body
-    assert_not_nil json['error_code']
-    assert_not_nil json['error_description']
+    assert_equal Errors::LIST[:unable_to_create_account][0], json['error_code']
+    assert_equal Errors::LIST[:unable_to_create_account][1], json['error_description']
   end
 
 
