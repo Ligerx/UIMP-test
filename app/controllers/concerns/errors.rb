@@ -12,6 +12,8 @@ module Errors
 
             unable_to_create_notification:  [8, 'Unable to create the notification'],
             notification_not_found:         [9, 'Notification was not found in the system'],
-            unable_to_delete_notification:  [10, 'Error occurred when trying to delete the notification']
+            unable_to_delete_notification:  [10, 'Error occurred when trying to delete the notification'],
+
+            unknown_error:                  [999, 'Unknown error occurred']
            }
 end
