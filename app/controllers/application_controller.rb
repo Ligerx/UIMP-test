@@ -83,4 +83,8 @@ class ApplicationController < ActionController::Base
     return user
   end
 
+  def user_invalid
+      
+  end
+
 end

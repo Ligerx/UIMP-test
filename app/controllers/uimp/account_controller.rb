@@ -2,9 +2,9 @@ class Uimp::AccountController < ApplicationController
   layout false
 
   def create_account
-    @new_user = User.new(create_account_params)
+    new_user = User.new(create_account_params)
 
-    if @new_user.save
+    if new_user.save
       # not sure how to redirect to additional login procedures
       # this site's simple login does not have this functionality
       render json: { redirect_url: root_url }
@@ -64,7 +64,7 @@ class Uimp::AccountController < ApplicationController
   end
 
   def find_user_from_token_or_login(params, request)
-    edit_params_if_changing_password_with_login
+    edit_params_when_changing_password
 
     user = find_user_by_request_token(request)
     user = find_user_by_params_login(params) if user.nil?
@@ -72,7 +72,7 @@ class Uimp::AccountController < ApplicationController
     return user
   end
 
-  def edit_params_if_changing_password_with_login
+  def edit_params_when_changing_password
     if params[:password]
       # If given a token, the new password is named password
       # Change this to new_password
