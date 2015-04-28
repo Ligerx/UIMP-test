@@ -40,9 +40,9 @@ class Uimp::AuthenticationController < ApplicationController
                       end
 
     if token_to_delete.nil?
-      render_error Errors::LIST[:token_to_delete_not_found] and return
+      render_error Errors::LIST[:token_to_delete_not_found], :not_found and return
     elsif header_token.user_id != token_to_delete.user_id
-      render_error Errors::LIST[:token_user_mismatch] and return
+      render_error Errors::LIST[:token_user_mismatch], :not_found and return
     end
 
     token_to_delete.update(expiration_date: DateTime.current)

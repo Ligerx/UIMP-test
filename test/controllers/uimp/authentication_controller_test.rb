@@ -17,7 +17,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   test "should NOT log in a user" do
     user_id = 'Alex@test.com'
     post :login, {user_id: user_id, password: 'wrong-password'}
-    assert_response :success
+    assert_response :unauthorized
 
     json = get_json_from @response.body
     # assert_equal "Invalid login", json['error_description']
@@ -39,7 +39,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
   test "should not create new token" do
     post :create_token, {user_id: 'Alex@test.com', password:'wrong-password'}
-    assert_response :success
+    assert_response :unauthorized
 
     json = get_json_from @response.body
 
@@ -54,6 +54,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
     @request.headers["uimp-token"] = test_token.access_token
     delete :destroy_token
+    assert_response :success
 
     json = get_json_from @response.body
 
@@ -70,6 +71,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
     @request.headers["uimp-token"] = test_token1.access_token
     delete :destroy_token, id: test_token2.id
+    assert_response :success
 
     json = get_json_from @response.body
 
@@ -84,24 +86,28 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   test "should not destroy tokens" do
     @request.headers["uimp-token"] = "not-a-token"
     delete :destroy_token, id: tokens(:one).id
+    assert_response :unauthorized
     json = get_json_from @response.body
     assert_equal Errors::LIST[:invalid_token][1], json['error_description']
 
 
     @request.headers["uimp-token"] = tokens(:one).access_token
     delete :destroy_token, id: -1 #Token shouldn't exist
+    assert_response :not_found
     json = get_json_from @response.body
     assert_equal Errors::LIST[:token_to_delete_not_found][1], json['error_description']
 
 
     @request.headers["uimp-token"] = tokens(:one).access_token
     delete :destroy_token, id: tokens(:two).id #Token should have different users
+    assert_response :not_found # Not found because it shouldn't exist from the user's perspective
     json = get_json_from @response.body
     assert_equal Errors::LIST[:token_user_mismatch][1], json['error_description']
 
 
     @request.headers["uimp-token"] = tokens(:three).access_token
     delete :destroy_token, id: tokens(:three).id #Token should be expired
+    assert_response :unauthorized
     json = get_json_from @response.body
     assert_equal Errors::LIST[:invalid_token][1], json['error_description']
   end
