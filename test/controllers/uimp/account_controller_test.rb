@@ -26,7 +26,7 @@ class Uimp::AccountControllerTest < ActionController::TestCase
 
   test "should not change password given the wrong password" do
     put :change_password, {'user_id' => 'Bob@test.com', 'old_password' => 'wrong_password', 'new_password' => 'new_password'}
-    assert_response :success
+    assert_response :unauthorized
 
     user = users(:Bob)
 
@@ -37,7 +37,7 @@ class Uimp::AccountControllerTest < ActionController::TestCase
 
   test "should not change password given expired token" do
     put :change_password, {access_token: tokens(:three).access_token, password: 'new_password'}
-    assert_response :success
+    assert_response :unauthorized
 
     user = users(:Bob)
 
@@ -56,7 +56,7 @@ class Uimp::AccountControllerTest < ActionController::TestCase
 
   test "should not create account given bad incomplete info" do
     post :create_account, { password_confirmation: 'password' }
-    assert_response :success #should these error pages be succeeding? I believe so?
+    assert_response :unprocessable_entity
 
     json = get_json_from @response.body
     assert_equal Errors::LIST[:unable_to_create_account][0], json['error_code']
@@ -91,7 +91,7 @@ class Uimp::AccountControllerTest < ActionController::TestCase
 
   test "should not update account info if given bad token" do
     put :update_account, {email: "new-username@gmail.com", access_token: tokens(:three).access_token}
-    assert_response :success
+    assert_response :unauthorized
 
     assert_not_equal "new-username@gmail.com", users(:Bob).email
   end

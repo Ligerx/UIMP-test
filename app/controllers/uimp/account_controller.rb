@@ -9,7 +9,7 @@ class Uimp::AccountController < ApplicationController
       # this site's simple login does not have this functionality
       render json: { redirect_url: root_url }
     else
-      render_error(Errors::LIST[:unable_to_create_account])
+      render_error(Errors::LIST[:unable_to_create_account], :unprocessable_entity)
     end
   end
 
@@ -21,7 +21,7 @@ class Uimp::AccountController < ApplicationController
     if user.update(password: params[:new_password])
       render json: {} and return
     else
-      render_error(Error::LIST[:unable_to_update_password]) and return
+      render_error(Error::LIST[:unable_to_update_password], :unprocessable_entity) and return
     end
   end
 
