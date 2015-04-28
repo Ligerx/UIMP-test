@@ -17,7 +17,8 @@ class Uimp::AuthenticationController < ApplicationController
       # Based on the spec document, tokens taken user_id, but devise uses email by default
       # I'll just work with both standards right now
       token = Token.create(user_id: params[:user_id])
-      render json: { access_token: token.access_token, expires_in: token.time_till_expiration }
+      render json: { access_token: token.access_token, expires_in: token.time_till_expiration },
+             status: :created
     else
       render_invalid_credentials_error
     end

@@ -9,7 +9,7 @@ class Uimp::NotificationController < ApplicationController
     new_notification.user = user
 
     if new_notification.save
-      render json: {} and return
+      render json: {}, status: :created and return
     else
       render_error(Errors::LIST[:unable_to_create_notification], :unprocessable_entity) and return
     end

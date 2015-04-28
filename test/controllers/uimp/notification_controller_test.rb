@@ -7,7 +7,7 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
 
     @request.headers['uimp-token'] = tokens(:one).access_token
     post :create_entry, { event: 'login_success', medium_type: 'email', medium_information: 'Alex@test.com' }
-    assert_response :success
+    assert_response :created
 
     assert_equal count+1, Notification.count
 

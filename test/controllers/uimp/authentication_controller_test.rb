@@ -29,7 +29,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
   test "should create new token" do
     post :create_token, {user_id: 'Alex@test.com', password:'password'}
-    assert_response :success
+    assert_response :created
 
     json = get_json_from @response.body
 

@@ -7,7 +7,7 @@ class Uimp::AccountController < ApplicationController
     if new_user.save
       # not sure how to redirect to additional login procedures
       # this site's simple login does not have this functionality
-      render json: { redirect_url: root_url }
+      render json: { redirect_url: root_url }, status: :created
     else
       render_error(Errors::LIST[:unable_to_create_account], :unprocessable_entity)
     end

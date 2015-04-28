@@ -49,7 +49,7 @@ class Uimp::AccountControllerTest < ActionController::TestCase
   test "should be able to create a new account" do
     account_params = {email: 'all_fields@gmail.com', password: 'password', password_confirmation: 'password'}
     post :create_account, account_params
-    assert_response :success
+    assert_response :created
 
     assert_includes User.all.to_a.map(&:email), "all_fields@gmail.com"
   end
