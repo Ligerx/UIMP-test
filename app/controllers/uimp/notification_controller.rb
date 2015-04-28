@@ -11,7 +11,7 @@ class Uimp::NotificationController < ApplicationController
     if new_notification.save
       render json: {} and return
     else
-      render_error(Errors::LIST[:unable_to_create_notification]) and return
+      render_error(Errors::LIST[:unable_to_create_notification], :unprocessable_entity) and return
     end
   end
 
@@ -23,11 +23,11 @@ class Uimp::NotificationController < ApplicationController
     entry = Notification.where(user: user).find_by(id: params[:id])
 
     if entry.nil?
-      render_error(Errors::LIST[:notification_not_found]) and return
+      render_error(Errors::LIST[:notification_not_found], :not_found) and return
     elsif entry.destroy
       render json: {} and return
     else
-      render_error(Errors::LIST[:unable_to_delete_notification]) and return
+      render_error(Errors::LIST[:unable_to_delete_notification], :internal_server_error) and return
     end
   end
 

@@ -23,11 +23,11 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
 
     @request.headers['uimp-token'] = tokens(:one).access_token
     post :create_entry, { event: 'not-an-event', medium_type: 'email', medium_information: 'Alex@test.com' }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert_equal count, Notification.count
 
     post :create_entry, { event: 'login_success', medium_type: 'not-a-medium', medium_information: 'Alex@test.com' }
-    assert_response :success
+    assert_response :unprocessable_entity
     assert_equal count, Notification.count
 
     ### No validation on email yet
@@ -44,6 +44,7 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
 
     @request.headers['uimp-token'] = tokens(:one).access_token
     delete :destroy_entry, { id: notif.id }
+    assert_response :success
 
     assert_not Notification.exists? notif
   end
@@ -56,6 +57,7 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
     # route :id without ( ) makes id mandatory
     # so, don't need to test missing id
     delete :destroy_entry, { id: 5000 }
+    assert_response :not_found
     assert Notification.exists? notif
   end
 
@@ -64,6 +66,7 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
   test "should show list of entries" do
     @request.headers['uimp-token'] = tokens(:one).access_token
     get :show_entries
+    assert_response :success
 
     json = get_json_from @response.body
     list = json['notification_entry_list']
