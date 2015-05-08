@@ -26,3 +26,17 @@ Things you may want to cover:
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
+
+
+<hr/>
+
+
+<h3>
+  Things not fully finished
+</h3>
+
+<ul>
+  <li>client_id inside user table, and checking it when a user logs in</li>
+  <li>Mailer</li>
+  <li>External testing suite?</li>
+</ul>
