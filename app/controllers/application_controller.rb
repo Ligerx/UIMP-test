@@ -47,4 +47,13 @@ class ApplicationController < ActionController::Base
     render_error(Errors::LIST[:invalid_token], :unauthorized)
   end
 
+
+  def send_notification_to(user, event, options = {success: true})
+    # send a message to user if the event is one of the user's current notifications
+    # pass success: false if you want to send a failed message instead
+    return if (options[:success] || user.nil? || event.nil?)
+
+    UIMP::Notification.notification_msg(user, event).deliver
+  end
+
 end
