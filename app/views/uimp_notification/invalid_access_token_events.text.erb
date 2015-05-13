@@ -1,0 +1,4 @@
+<% case @event %>
+<% when "invalid_access_token" %>
+  Someone unsuccessfully tried to access your account with an invalid token (ip address: <%= @ip %>)
+<% end %>

@@ -1,21 +1,28 @@
 class Notification < ActiveRecord::Base
-  DEFINED_EVENTS =  %w[ login_success login_success_without_client_id login_failure
-                        get_access_token_success get_access_token_success_without_client_id get_access_token_failure
-                        invalid_access_token
-                      ]
-  API_EVENTS = %w[
-                  revoke_access_token
-                  get_access_token_list
-                  create_account
-                  change_password
-                  request_password_recovery
-                  update_account_information
-                  create_notification_entry
-                  delete_notification_entry
-                  get_notification_entry_list
+  LOGIN_EVENTS =  %w[ login_success 
+                      login_success_without_client_id 
+                      login_failure
+                    ]
+
+  GET_ACCESS_TOKEN_EVENTS = %w[ get_access_token_success 
+                                get_access_token_success_without_client_id 
+                                get_access_token_failure
+                              ]
+
+  INVALID_ACCESS_TOKEN_EVENTS = %w[ invalid_access_token ]
+
+  API_EVENTS = %w[  revoke_access_token
+                    get_access_token_list
+                    create_account
+                    change_password
+                    request_password_recovery
+                    update_account_information
+                    create_notification_entry
+                    delete_notification_entry
+                    get_notification_entry_list
                  ]
   
-  EVENTS = DEFINED_EVENTS + API_EVENTS
+  EVENTS = LOGIN_EVENTS + GET_ACCESS_TOKEN_EVENTS + INVALID_ACCESS_TOKEN_EVENTS + API_EVENTS
 
 
   belongs_to :user
