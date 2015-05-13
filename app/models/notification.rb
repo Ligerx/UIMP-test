@@ -1,11 +1,9 @@
 class Notification < ActiveRecord::Base
-  DEFINED_EVENTS =  %w[always invalid_client_token login_success login_success_without_client_id login_failure]
+  DEFINED_EVENTS =  %w[ login_success login_success_without_client_id login_failure
+                        get_access_token_success get_access_token_success_without_client_id get_access_token_failure
+                        invalid_access_token
+                      ]
   API_EVENTS = %w[
-                  service_information
-                  requested_user_information
-                  authentication_policy
-                  login
-                  get_access_token
                   revoke_access_token
                   get_access_token_list
                   create_account
