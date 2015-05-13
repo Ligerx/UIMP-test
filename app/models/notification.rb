@@ -9,7 +9,9 @@ class Notification < ActiveRecord::Base
                                 get_access_token_failure
                               ]
 
-  INVALID_ACCESS_TOKEN_EVENTS = %w[ invalid_access_token ]
+  INVALID_CREDENTIAL_EVENTS = %w[ invalid_access_token
+                                  invalid_login_credentials
+                                ]
 
   API_EVENTS = %w[  revoke_access_token
                     get_access_token_list
@@ -22,7 +24,7 @@ class Notification < ActiveRecord::Base
                     get_notification_entry_list
                  ]
   
-  EVENTS = LOGIN_EVENTS + GET_ACCESS_TOKEN_EVENTS + INVALID_ACCESS_TOKEN_EVENTS + API_EVENTS
+  EVENTS = LOGIN_EVENTS + GET_ACCESS_TOKEN_EVENTS + INVALID_CREDENTIAL_EVENTS + API_EVENTS
 
 
   belongs_to :user
