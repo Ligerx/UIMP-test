@@ -7,7 +7,7 @@ class Uimp::Notification < ActionMailer::Base
     @event = event
     @ip = ip # mailer has no access to request, so pass the ip in myself
 
-    mail(to: @user.email, template: template_type)
+    mail(to: @user.email, template_name: template_type) #, template_path: 'uimp/notification')
   end
 
 
