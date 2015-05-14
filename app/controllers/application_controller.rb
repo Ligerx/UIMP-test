@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
 
   def render_invalid_token_error(user = nil, options = {suppress: false})
     send_notification_to(user, 'invalid_access_token') if (!options[:suppress] && user)
-    
+
     render_error(Errors::LIST[:invalid_token], :unauthorized)
   end
 
@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
     user_notifications = user.notifications.map(&:event)
     return unless (user_notifications.include? event)
 
-    UIMP::Notification.notification_msg(user, event).deliver_now
+    UIMP::Notification.notification_msg(user, event, request.remote_ip).deliver_now
   end
 
 end

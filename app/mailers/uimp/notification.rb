@@ -2,10 +2,10 @@ class Uimp::Notification < ActionMailer::Base
   default from: "uimp.test@gmail.com",
           subject: "Notification from UIMP"
 
-  def notification_msg(user, event)
+  def notification_msg(user, event, ip)
     @user = user
     @event = event
-    @ip = request.remote_ip
+    @ip = ip # mailer has no access to request, so pass the ip in myself
 
     mail(to: @user.email, template: template_type)
   end

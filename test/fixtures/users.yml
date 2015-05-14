@@ -7,6 +7,7 @@
 Alex:
   email: Alex@test.com
   encrypted_password: <%= Devise.bcrypt(User, 'password') %>
+  client_id: 1234
 
 Bob: 
   email: Bob@test.com

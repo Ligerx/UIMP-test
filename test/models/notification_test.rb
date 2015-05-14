@@ -3,16 +3,17 @@ require 'test_helper'
 class NotificationTest < ActiveSupport::TestCase
   test "should allow defined events and all API events" do
     EVENTS = %w[
-                always
-                invalid_client_token
                 login_success
                 login_success_without_client_id
                 login_failure
-                service_information
-                requested_user_information
-                authentication_policy
-                login
-                get_access_token
+
+                get_access_token_success
+                get_access_token_success_without_client_id
+                get_access_token_failure
+
+                invalid_access_token
+                invalid_login_credentials
+
                 revoke_access_token
                 get_access_token_list
                 create_account
@@ -25,7 +26,7 @@ class NotificationTest < ActiveSupport::TestCase
                ]
 
     notif = Notification.new( user_id: users(:Alex).id,
-                              event: 'always',
+                              event: 'login_success',
                               medium_type: 'email',
                               medium_information: 'Alex@test.com'
                             )
@@ -33,7 +34,7 @@ class NotificationTest < ActiveSupport::TestCase
 
     EVENTS.each do |event|
       notif.event = event
-      assert notif.valid?
+      assert notif.valid?, event
     end
 
     notif.event = 'not-an-event'
@@ -51,7 +52,7 @@ class NotificationTest < ActiveSupport::TestCase
 
   test "should take valid medium_type" do
     user = User.create(email: 'user@test.com', password: 'password', password_confirmation: 'password')
-    notif = Notification.new(user: user, event: 'always', medium_information: 'Alex@test.com')
+    notif = Notification.new(user: user, event: 'login_success', medium_information: 'Alex@test.com')
     
     notif.medium_type = 'email'
     assert notif.valid?
