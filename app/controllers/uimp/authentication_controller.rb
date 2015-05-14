@@ -2,25 +2,39 @@ class Uimp::AuthenticationController < ApplicationController
   layout false
 
   def login
-    if find_user_by_params_login(params)
-      resource = User.find_by_email(params[:user_id])
-      sign_in_and_redirect(resource)
+    user = find_user_by_params_login(params)
+    if user
+      # event = (params[:client_id] && user.client_id == params[:client_id]) ? 
+      #     'login_success' : 'login_success_without_client_id'
+      # send_notification_to(user, event)
+      account_access_notification(user, params[:client_id], 'login')
+
+      sign_in_and_redirect(user)
     else
-      render_invalid_credentials_error
+      send_notification_to(user, 'login_failure') if user
+      render_invalid_credentials_error(nil, user, suppress: (user ? true : false))
     end
   end
 
 
   def create_token
-    if find_user_by_params_login(params)
+    user = find_user_by_params_login(params)
+    if user
       # add new token to db
       # Based on the spec document, tokens taken user_id, but devise uses email by default
       # I'll just work with both standards right now
+
+      # event = (params[:client_id] && user.client_id == params[:client_id]) ? 
+      #     'get_access_token_success' : 'get_access_token_success_without_client_id'
+      # send_notification_to(user, event)
+      account_access_notification(user, params[:client_id], 'get_access_token')
+
       token = Token.create(user_id: params[:user_id])
       render json: { access_token: token.access_token, expires_in: token.time_till_expiration },
              status: :created
     else
-      render_invalid_credentials_error
+      send_notification_to(user, 'get_access_token_failure') if user
+      render_invalid_credentials_error(nil, user, suppress: (user ? true : false))
     end
   end
 
@@ -70,6 +84,12 @@ class Uimp::AuthenticationController < ApplicationController
     end
 
     return { access_token_list: tokens }
+  end
+
+  def account_access_notification(user, client_id, event_prefix)
+    event = (client_id && user.client_id == client_id) ? 
+      "#{event_prefix}_success" : "#{event_prefix}_success_without_client_id"
+    send_notification_to(user, event)
   end
 
 end

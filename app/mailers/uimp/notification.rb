@@ -17,8 +17,8 @@ class Uimp::Notification < ActionMailer::Base
       'login_events'
     elsif Notification::GET_ACCESS_TOKEN_EVENTS.include? @event
       'get_access_token_events'
-    elsif Notification::INVALID_ACCESS_TOKEN_EVENTS.include? @event
-      'invalid_access_tokens_events'
+    elsif Notification::INVALID_CREDENTIAL_EVENTS.include? @event
+      'invalid_credential_events'
     elsif Notification::API_EVENTS.include? @event
       'general_response'
     else

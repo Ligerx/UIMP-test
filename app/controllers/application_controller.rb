@@ -39,11 +39,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def render_invalid_credentials_error
+  def render_invalid_credentials_error(email = nil, user = nil, options = {suppress: false})
+    if (!options[:suppress] && (email || user))
+      user = User.find_by(email: email) if email #overwrite user if finding thru email
+      send_notification_to(user, 'invalid_login_credentials') unless user.nil?
+    end
+
     render_error(Errors::LIST[:invalid_credentials], :unauthorized)
   end
 
-  def render_invalid_token_error
+  def render_invalid_token_error(user = nil, options = {suppress: false})
+    send_notification_to(user, 'invalid_access_token') if (!options[:suppress] && user)
+    
     render_error(Errors::LIST[:invalid_token], :unauthorized)
   end
 
@@ -57,7 +64,7 @@ class ApplicationController < ActionController::Base
     user_notifications = user.notifications.map(&:event)
     return unless (user_notifications.include? event)
 
-    UIMP::Notification.notification_msg(user, event).deliver
+    UIMP::Notification.notification_msg(user, event).deliver_now
   end
 
 end

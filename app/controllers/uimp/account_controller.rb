@@ -48,7 +48,7 @@ class Uimp::AccountController < ApplicationController
 
   private
   def create_account_params
-    params.permit(:email, :password, :password_confirmation)
+    params.permit(:email, :password, :password_confirmation, :client_id)
   end
 
   def update_params

@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   has_many :tokens
   has_many :notifications
 
+  # use can have client_id passed in on account creation
+
   scope :find_by_email, ->(input_email) { find_by(email: input_email) }
 
 
