@@ -1,12 +1,9 @@
 <% case @event %>
 <% when "get_access_token_success" %>
-  An access token was created for your account (ip address: <%= @ip %>)
-
+An access token was created for your account (ip address: <%= @ip %>)
 <% when "get_access_token_success_without_client_id" %>
-  <%# Shouldn't ever happen %>
-  An access token was created for your account by manually typing your login info (ip address: <%= @ip %>)
-
+<%# Shouldn't ever happen %>
+An access token was created for your account by manually typing your login info (ip address: <%= @ip %>)
 <% when "get_access_token_failure" %>
-  Someone unsuccessfully tried to create an access token for your account (ip address: <%= @ip %>)
-
+Someone unsuccessfully tried to create an access token for your account (ip address: <%= @ip %>)
 <% end %>

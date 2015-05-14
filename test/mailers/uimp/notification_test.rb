@@ -11,8 +11,52 @@ class Uimp::NotificationTest < ActionMailer::TestCase
     assert_equal ['uimp.test@gmail.com'], email.from
     assert_equal [users(:Alex).email], email.to
     assert_equal 'Notification from UIMP', email.subject
-    assert email.body.to_s.include? '1.2.3.4'
+    assert email.body.include? '1.2.3.4'
   end
 
-  test ''
+
+  ### login events
+  test 'login success' do
+    email = Uimp::Notification.notification_msg(users(:Alex), 'login_success', TEST_IP).deliver
+    assert_equal read_fixture('login_success').join, email.body.to_s
+  end
+
+  test 'login success without client id' do
+    flunk 
+  end
+
+  test 'login failure' do
+    flunk
+  end
+
+
+  ### access token events
+  test 'get access token success' do
+    flunk
+  end
+
+  test 'get access token success without client id' do
+    flunk 
+  end
+
+  test 'get access token failure' do
+    flunk
+  end
+
+
+  ### bad auth events
+  test 'invalid access token' do
+    flunk
+  end
+
+  test 'invalid login credentials' do
+    flunk
+  end
+
+
+  ### other events
+  test 'general api event responses' do
+    flunk
+  end
+
 end

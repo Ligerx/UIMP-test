@@ -1,11 +1,8 @@
 <% case @event %>
 <% when "login_success" %>
-  Your account was accessed (ip address: <%= @ip %>)
-
+Your account was accessed (ip address: <%= @ip %>)
 <% when "login_success_without_client_id" %>
-  Your account was accessed by manually typing your login info (ip address: <%= @ip %>)
-
+Your account was accessed by manually typing your login info (ip address: <%= @ip %>)
 <% when "login_failure" %>
-  Someone unsuccessfully tried to access your account (ip address: <%= @ip %>)
-
+Someone unsuccessfully tried to access your account (ip address: <%= @ip %>)
 <% end %>
