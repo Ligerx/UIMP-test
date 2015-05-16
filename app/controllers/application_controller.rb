@@ -59,12 +59,14 @@ class ApplicationController < ActionController::Base
     # send a message to user if the event is one of the user's current notifications
     # pass success: false if you want to send a failed message instead
     # NOTE: currently not checking for success or failure, just sending a message all the time
+puts "user.nil? #{user.nil?}"
+puts "event.nil? #{event.nil?}"
     return if (user.nil? || event.nil?)
-
+puts ""
     user_notifications = user.notifications.map(&:event)
     return unless (user_notifications.include? event)
-
-    UIMP::Notification.notification_msg(user, event, request.remote_ip).deliver_now
+puts "ABOUT TO SEND MESSAGE"
+    UIMP::Notification.notification_msg(user, event, request.remote_ip).deliver
   end
 
 end

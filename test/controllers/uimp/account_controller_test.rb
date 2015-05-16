@@ -101,4 +101,44 @@ class Uimp::AccountControllerTest < ActionController::TestCase
   #   flunk
   # end
 
+
+
+
+  ####################
+  ### Mailer tests
+
+  # create_account: NONE
+  # change_password: invalid cred/token, self
+  # request_password_recovery: self
+  # update account: invalid token, self
+
+  test 'change password sends message' do
+    assert_equal 0, ActionMailer::Base.deliveries.size
+    
+    set_test_ip(@request)
+    put :change_password, {user_id: 'Alex@test.com', old_password:'password', new_password:'new_password'}
+
+    assert_equal 1, ActionMailer::Base.deliveries.size
+    
+    email = ActionMailer::Base.deliveries.last
+    assert_equal general_response_msg('change_password'), email.body
+
+    # assert_equal "You have been invited by me@example.com", email.subject
+    # assert_equal 'friend@example.com', email.to[0]
+    # assert_match(/Hi friend@example.com/, email.body.to_s)
+    # flunk
+  end
+
+  test 'request password sends a message' do
+    flunk
+  end
+
+  test 'update account sends a message' do
+    flunk
+  end
+
+  test 'invalid logins send a message' do
+    flunk
+  end
+
 end

@@ -27,4 +27,19 @@ class ActiveSupport::TestCase
     # response should be a string, not an ActionDispatch::Response obj
     ActiveSupport::JSON.decode response
   end
+
+
+  ### Mailer stuff
+  TEST_IP = '1.2.3.4'
+
+  # Mailer helpers generate generic api call email
+  def general_response_msg(api, ip = TEST_IP)
+    "#{api} was called (ip address: #{ip})\n"
+  end
+
+  # set the default ip in a test
+  def set_test_ip(request, ip = TEST_IP)
+    request.env['REMOTE_ADDR'] = ip
+  end
+
 end
