@@ -22,7 +22,7 @@ class Uimp::Notification < ActionMailer::Base
     elsif Notification::API_EVENTS.include? @event
       'general_response'
     else
-      raise "(Notification mailer) API event not found: #{@event}"
+      raise "(Notification mailer) API event not found: '#{@event}'"
     end
   end
 end
