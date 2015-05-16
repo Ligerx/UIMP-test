@@ -11,3 +11,99 @@ two:
   event: service_information
   medium_type: sms
   medium_information: 1112223333
+
+
+
+
+login_success_without_client_id:
+  user: Alex
+  event: login_success_without_client_id
+  medium_type: email
+  medium_information: Alex@test.com
+
+login_failure:
+  user: Alex
+  event: login_failure
+  medium_type: email
+  medium_information: Alex@test.com
+
+
+get_access_token_success:
+  user: Alex
+  event: get_access_token_success
+  medium_type: email
+  medium_information: Alex@test.com
+
+get_access_token_success_without_client_id:
+  user: Alex
+  event: get_access_token_success_without_client_id
+  medium_type: email
+  medium_information: Alex@test.com
+
+get_access_token_failure:
+  user: Alex
+  event: get_access_token_failure
+  medium_type: email
+  medium_information: Alex@test.com
+
+
+invalid_access_token:
+  user: Alex
+  event: invalid_access_token
+  medium_type: email
+  medium_information: Alex@test.com
+
+invalid_login_credentials:
+  user: Alex
+  event: invalid_login_credentials
+  medium_type: email
+  medium_information: Alex@test.com
+
+
+revoke_access_tokens:
+  user: Alex
+  event: revoke_access_tokens
+  medium_type: email
+  medium_information: Alex@test.com
+
+get_access_token_list:
+  user: Alex
+  event: get_access_token_list
+  medium_type: email
+  medium_information: Alex@test.com
+
+change_password:
+  user: Alex
+  event: change_password
+  medium_type: email
+  medium_information: Alex@test.com
+
+request_password_recovery:
+  user: Alex
+  event: request_password_recovery
+  medium_type: email
+  medium_information: Alex@test.com
+
+update_account_information:
+  user: Alex
+  event: update_account_information
+  medium_type: email
+  medium_information: Alex@test.com
+
+create_notification_entry:
+  user: Alex
+  event: create_notification_entry
+  medium_type: email
+  medium_information: Alex@test.com
+
+delete_notification_entry:
+  user: Alex
+  event: delete_notification_entry
+  medium_type: email
+  medium_information: Alex@test.com
+
+get_notification_entry_list:
+  user: Alex
+  event: get_notification_entry_list
+  medium_type: email
+  medium_information: Alex@test.com

@@ -107,7 +107,7 @@ class Uimp::AccountControllerTest < ActionController::TestCase
   ####################
   ### Mailer tests
 
-  # create_account: NONE
+  # create_account: NONE (this one doesn't really make sense to exist)
   # change_password: invalid cred/token, self
   # request_password_recovery: self
   # update account: invalid token, self
@@ -119,7 +119,7 @@ class Uimp::AccountControllerTest < ActionController::TestCase
     put :change_password, {user_id: 'Alex@test.com', old_password:'password', new_password:'new_password'}
 
     assert_equal 1, ActionMailer::Base.deliveries.size
-    
+
     email = ActionMailer::Base.deliveries.last
     assert_equal general_response_msg('change_password'), email.body
 

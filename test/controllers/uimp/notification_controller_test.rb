@@ -72,10 +72,13 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
     list = json['notification_entry_list']
 
     # only show the 1 notification belonging to this token's user
-    assert_equal 1, list.size
+    assert_equal 16, list.size
 
     notif_1_info = { 'id' => notifications(:one).id, 'event' => 'login_success', 'medium' => 'email', 'medium_information' => 'Alex@test.com' }
-    assert_equal notif_1_info, list[0]
+    assert list.include? notif_1_info
+    # assert_equal notif_1_info, list[0], list.map {|hash| hash["id"]}
+    # ^this test stopped working once I added more notifs in the fixtures.
+    # Order wasn't guaranteed
 
     # notif_2_info = { 'id' => notifications(:two).id, 'event' => 'service_information', 'medium' => 'sms', 'medium_information' => '1112223333' }
     # assert_equal notif_2_info, list[1]
