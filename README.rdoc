@@ -1,6 +1,6 @@
 == UIMP Example App
 
-*Universal Identity Management Protocol* (UIMP) is a set of APIs that UniAuth-compliant services should support. UniAuth clients manage users' identities stored in the service through the APIs. Currently, this version of UIMP is designed as a set of RESTful APIs for web services.
+__Universal Identity Management Protocol__ (UIMP) is a set of APIs that UniAuth-compliant services should support. UniAuth clients manage users' identities stored in the service through the APIs. Currently, this version of UIMP is designed as a set of RESTful APIs for web services.
 
 UIMP is designed to enable password management applications to handle account management tasks with minimum user intervention. This API will also be ported to other small local devices through Bluetooth or NFC.
 
