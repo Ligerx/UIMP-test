@@ -30,6 +30,7 @@ class ActiveSupport::TestCase
   end
 
 
+  ####################
   ### Mailer stuff
   TEST_IP = '1.2.3.4'
 
@@ -52,6 +53,9 @@ class ActiveSupport::TestCase
     assert_equal size+1, ActionMailer::Base.deliveries.size, "Message probably wasn't sent"
 
     email = ActionMailer::Base.deliveries.last
+
+    # With the general messages, the event is in the body, and thus it tests the content
+    # If you override the default message, you should test the message content yourself
     assert_equal message, email.body.to_s
   end
 

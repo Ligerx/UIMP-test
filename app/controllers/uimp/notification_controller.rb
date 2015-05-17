@@ -5,6 +5,8 @@ class Uimp::NotificationController < ApplicationController
     user = find_user_by_request_token(request)
     (render_invalid_token_error and return) if user.nil?
 
+    send_notification_to user, 'create_notification_entry'
+
     new_notification = Notification.new(notification_params)
     new_notification.user = user
 
@@ -20,8 +22,9 @@ class Uimp::NotificationController < ApplicationController
     user = find_user_by_request_token(request)
     (render_invalid_token_error and return) if user.nil?
 
-    entry = Notification.where(user: user).find_by(id: params[:id])
+    send_notification_to user, 'delete_notification_entry'
 
+    entry = Notification.where(user: user).find_by(id: params[:id])
     if entry.nil?
       render_error(Errors::LIST[:notification_not_found], :not_found) and return
     elsif entry.destroy
@@ -36,6 +39,7 @@ class Uimp::NotificationController < ApplicationController
     user = find_user_by_request_token(request)
     (render_invalid_token_error and return) if user.nil?
 
+    send_notification_to user, 'get_notification_entry_list'
     render json: entries_json(user) and return
   end
 

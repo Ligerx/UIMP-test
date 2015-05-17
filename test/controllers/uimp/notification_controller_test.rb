@@ -84,4 +84,39 @@ class Uimp::NotificationControllerTest < ActionController::TestCase
     # assert_equal notif_2_info, list[1]
   end
 
+
+
+  ####################
+  ### Mailer tests
+
+  # create_notification_entry: self
+  # delete_notification_entry: self
+  # get_notification_entry_list: self
+
+  test 'create notification sends message' do
+    mail_test_outline 'create_notification_entry' do
+      @request.headers['uimp-token'] = tokens(:one).access_token
+      post :create_entry, { event: 'login_success', medium_type: 'email', medium_information: 'Alex@test.com' }
+    end
+  end
+
+
+  test 'delete notification sends message' do
+    mail_test_outline 'delete_notification_entry' do
+      notif = notifications(:one)
+      assert Notification.exists? notif
+
+      @request.headers['uimp-token'] = tokens(:one).access_token
+      delete :destroy_entry, { id: notif.id }
+    end
+  end
+
+
+  test 'getting notifications list notification sends message' do
+    mail_test_outline 'get_notification_entry_list' do
+      @request.headers['uimp-token'] = tokens(:one).access_token
+      get :show_entries
+    end
+  end
+
 end
