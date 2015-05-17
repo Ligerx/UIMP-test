@@ -55,7 +55,8 @@ class ActiveSupport::TestCase
     email = ActionMailer::Base.deliveries.last
 
     # With the general messages, the event is in the body, and thus it tests the content
-    # If you override the default message, you should test the message content yourself
+    # If you override the default message AND that message could be used in more than once,
+    # you should probably test the message content yourself
     assert_equal message, email.body.to_s
   end
 
