@@ -171,19 +171,31 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
 
 
   test 'get access token success message' do
-    flunk
+    mail_test_outline 'get_access_token_success', 
+                      "An access token was created for your account (ip address: 1.2.3.4)\n" do
+      post :create_token, {user_id: 'Alex@test.com', password:'password', client_id: '1234'}
+    end
   end
 
   test 'get access token success w/ client_id message' do
-    flunk
+    mail_test_outline 'get_access_token_success_without_client_id', 
+                      "An access token was created for your account by manually typing your login info (ip address: 1.2.3.4)\n" do
+      post :create_token, {user_id: 'Alex@test.com', password:'password'}
+    end
   end
 
   test 'get access token failure message' do
-    flunk
+    mail_test_outline 'get_access_token_failure', 
+                      "Someone unsuccessfully tried to create an access token for your account (ip address: 1.2.3.4)\n" do
+      post :create_token, {user_id: 'Alex@test.com', password:'wrong-password'}
+    end
   end
 
   test "can't send get token failure message if username not found" do
-    flunk
+    size = ActionMailer::Base.deliveries.size
+    post :create_token, {user_id: 'not-an-email@test.com', password: 'password'}
+
+    assert_equal size, ActionMailer::Base.deliveries.size, "Shouldn't send a message if user isn't found"
   end
 
 
