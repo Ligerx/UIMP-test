@@ -1,4 +1,4 @@
-== UIMP Example App
+## UIMP Example App
 
 __Universal Identity Management Protocol__ (UIMP) is a set of APIs that UniAuth-compliant services should support. UniAuth clients manage users' identities stored in the service through the APIs. Currently, this version of UIMP is designed as a set of RESTful APIs for web services.
 
