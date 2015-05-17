@@ -44,7 +44,10 @@ class Uimp::AuthenticationController < ApplicationController
     # The header token checks the validity of the action
     # The id passed is the token to be deleted
 
-    (render_invalid_token_error and return) if find_user_by_request_token(request).nil?
+    user = find_user_by_request_token(request)
+    (render_invalid_token_error and return) if user.nil?
+
+    send_notification_to user, 'revoke_access_token'
 
     header_token_string = request.headers["uimp-token"]
     header_token = Token.find_by_access_token(header_token_string)
@@ -70,6 +73,7 @@ class Uimp::AuthenticationController < ApplicationController
     user = find_user_by_request_token(request)
     (render_invalid_token_error and return) if user.nil?
 
+    send_notification_to user, 'get_access_token_list'
     render json: get_active_tokens_json(user) and return
   end
 

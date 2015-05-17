@@ -132,4 +132,53 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
     end
   end
 
+
+  ####################
+  ### Mailer tests
+
+  # login: login x3
+  # token: token x3
+  # destroy_token: invalid token, self
+  # active tokens: invalid token, self
+
+  test 'login success message' do
+    flunk
+  end
+
+  test 'login success w/ client_id message' do
+    flunk
+  end
+
+  test 'login failure message' do
+    flunk
+  end
+
+
+  test 'get access token success message' do
+    flunk
+  end
+
+  test 'get access token success w/ client_id message' do
+    flunk
+  end
+
+  test 'get access token failure message' do
+    flunk
+  end
+
+
+  test 'destroy token sends message' do
+    mail_test_outline 'revoke_access_token' do
+      @request.headers["uimp-token"] = tokens(:one).access_token
+      delete :destroy_token
+    end
+  end
+
+  test 'active tokens list sends message' do
+    mail_test_outline 'get_access_token_list' do
+      @request.headers["uimp-token"] = tokens(:one).access_token
+      get :active_tokens
+    end
+  end
+
 end

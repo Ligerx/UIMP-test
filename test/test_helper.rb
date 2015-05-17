@@ -42,16 +42,16 @@ class ActiveSupport::TestCase
     request.env['REMOTE_ADDR'] = ip
   end
 
-  def mail_test_outline(api, &block)
+  def mail_test_outline(api, message = general_response_msg(api), &block)
     size = ActionMailer::Base.deliveries.size
 
     set_test_ip(@request)
     block.call
 
-    assert_equal size+1, ActionMailer::Base.deliveries.size
+    assert_equal size+1, ActionMailer::Base.deliveries.size, "Message probably wasn't sent"
 
     email = ActionMailer::Base.deliveries.last
-    assert_equal general_response_msg(api), email.body.to_s
+    assert_equal message, email.body.to_s
   end
 
 end

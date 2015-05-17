@@ -60,9 +60,9 @@ invalid_login_credentials:
   medium_information: Alex@test.com
 
 
-revoke_access_tokens:
+revoke_access_token:
   user: Alex
-  event: revoke_access_tokens
+  event: revoke_access_token
   medium_type: email
   medium_information: Alex@test.com
 
