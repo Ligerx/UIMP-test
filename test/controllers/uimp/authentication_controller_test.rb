@@ -165,7 +165,7 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   test "can't send login failure message if username not found" do
     size = ActionMailer::Base.deliveries.size
     post :login, {user_id: 'not-an-email@test.com', password: 'password'}
-    
+
     assert_equal size, ActionMailer::Base.deliveries.size, "Shouldn't send a message if user isn't found"
   end
 
@@ -179,6 +179,10 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   end
 
   test 'get access token failure message' do
+    flunk
+  end
+
+  test "can't send get token failure message if username not found" do
     flunk
   end
 
