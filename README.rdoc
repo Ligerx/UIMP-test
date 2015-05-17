@@ -1,42 +1,7 @@
-== README
+== UIMP Example App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Universal Identity Management Protocol (UIMP) is a set of APIs that UniAuth-compliant services should support. UniAuth clients manage users' identities stored in the service through the APIs. Currently, this version of UIMP is designed as a set of RESTful APIs for web services.
 
-Things you may want to cover:
+UIMP is designed to enable password management applications to handle account management tasks with minimum user intervention. This API will also be ported to other small local devices through Bluetooth or NFC.
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
-
-
-<hr/>
-
-
-<h3>
-  Things not fully finished
-</h3>
-
-<ul>
-  <li>client_id inside user table, and checking it when a user logs in</li>
-  <li>Mailer</li>
-  <li>External testing suite?</li>
-</ul>
+This Rails application serves as an example of how this service could be implemented in a modern web app. This can also service as the basis for extraction into a Rails gem for future use.
