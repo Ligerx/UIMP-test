@@ -4,15 +4,17 @@ class Uimp::AuthenticationController < ApplicationController
   def login
     user = find_user_by_params_login(params)
     if user
-      # event = (params[:client_id] && user.client_id == params[:client_id]) ? 
-      #     'login_success' : 'login_success_without_client_id'
-      # send_notification_to(user, event)
-      account_access_notification(user, params[:client_id], 'login')
+      event = (params[:client_id] && user.client_id == params[:client_id]) ? 
+          'login_success' : 'login_success_without_client_id'
+      send_notification_to user, event
+      # account_access_notification(user, params[:client_id], 'login')
 
       sign_in_and_redirect(user)
     else
-      send_notification_to(user, 'login_failure') if user
-      render_invalid_credentials_error(nil, user, suppress: (user ? true : false))
+      user_no_pw = User.find_by(email: params[:user_id])
+      
+      send_notification_to(user_no_pw, 'login_failure') if user_no_pw
+      render_invalid_credentials_error(nil, user_no_pw, suppress: (user_no_pw ? true : false))
     end
   end
 
@@ -27,7 +29,8 @@ class Uimp::AuthenticationController < ApplicationController
       # event = (params[:client_id] && user.client_id == params[:client_id]) ? 
       #     'get_access_token_success' : 'get_access_token_success_without_client_id'
       # send_notification_to(user, event)
-      account_access_notification(user, params[:client_id], 'get_access_token')
+
+      # account_access_notification(user, params[:client_id], 'get_access_token')
 
       token = Token.create(user_id: params[:user_id])
       render json: { access_token: token.access_token, expires_in: token.time_till_expiration },
@@ -88,12 +91,6 @@ class Uimp::AuthenticationController < ApplicationController
     end
 
     return { access_token_list: tokens }
-  end
-
-  def account_access_notification(user, client_id, event_prefix)
-    event = (client_id && user.client_id == client_id) ? 
-      "#{event_prefix}_success" : "#{event_prefix}_success_without_client_id"
-    send_notification_to(user, event)
   end
 
 end

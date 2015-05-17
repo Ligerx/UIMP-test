@@ -59,7 +59,6 @@ class ApplicationController < ActionController::Base
     # send a message to user if the event is one of the user's current notifications
     # pass success: false if you want to send a failed message instead
     # NOTE: currently not checking for success or failure, just sending a message all the time
-
     return if (user.nil? || event.nil?)
 
     user_notifications = user.notifications.map(&:event)

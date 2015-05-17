@@ -141,16 +141,32 @@ class Uimp::AuthenticationControllerTest < ActionController::TestCase
   # destroy_token: invalid token, self
   # active tokens: invalid token, self
 
-  test 'login success message' do
-    flunk
+  test 'login success w/ client_id message' do
+    mail_test_outline 'login_success', 
+                      "Your account was accessed (ip address: 1.2.3.4)\n" do
+      post :login, {user_id: 'Alex@test.com', password: 'password', client_id: '1234'}
+    end
   end
 
-  test 'login success w/ client_id message' do
-    flunk
+  test 'login success w/o client_id message' do
+    mail_test_outline 'login_success_without_client_id', 
+                      "Your account was accessed by manually typing your login info (ip address: 1.2.3.4)\n" do
+      post :login, {user_id: 'Alex@test.com', password: 'password'}
+    end
   end
 
   test 'login failure message' do
-    flunk
+    mail_test_outline 'login_failure', 
+                      "Someone unsuccessfully tried to access your account (ip address: 1.2.3.4)\n" do
+      post :login, {user_id: 'Alex@test.com', password: 'wrong-password'}
+    end
+  end
+
+  test "can't send login failure message if username not found" do
+    size = ActionMailer::Base.deliveries.size
+    post :login, {user_id: 'not-an-email@test.com', password: 'password'}
+    
+    assert_equal size, ActionMailer::Base.deliveries.size, "Shouldn't send a message if user isn't found"
   end
 
 
