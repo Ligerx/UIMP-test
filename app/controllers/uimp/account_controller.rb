@@ -18,9 +18,8 @@ class Uimp::AccountController < ApplicationController
     # This could be made to account for both types of login errors, but currently isn't.
     user = find_user_from_token_or_login(params, request)
     (render_invalid_credentials_error and return) if user.nil?
-# puts "\n------- RIGHT BEFORE SENDING MESSAGE"
+
     send_notification_to user, 'change_password'
-# puts "\nRIGHT AFTER SENDING MESSAGE"
     if user.update(password: params[:new_password])
       render json: {} and return
     else
@@ -40,6 +39,7 @@ class Uimp::AccountController < ApplicationController
     user = find_user_by_request_token(request)
     (render_invalid_token_error and return) if user.nil?
 
+    send_notification_to user, 'update_account_information'
     if user.update(update_params)
       render json: {}
     else

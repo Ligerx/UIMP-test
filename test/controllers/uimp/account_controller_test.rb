@@ -113,32 +113,20 @@ class Uimp::AccountControllerTest < ActionController::TestCase
   # update account: invalid token, self
 
   test 'change password sends message' do
-    assert_equal 0, ActionMailer::Base.deliveries.size
-    
-    set_test_ip(@request)
-    put :change_password, {user_id: 'Alex@test.com', old_password:'password', new_password:'new_password'}
-
-    assert_equal 1, ActionMailer::Base.deliveries.size
-
-    email = ActionMailer::Base.deliveries.last
-    assert_equal general_response_msg('change_password'), email.body
-
-    # assert_equal "You have been invited by me@example.com", email.subject
-    # assert_equal 'friend@example.com', email.to[0]
-    # assert_match(/Hi friend@example.com/, email.body.to_s)
-    # flunk
+    mail_test_outline 'change_password' do
+      put :change_password, {user_id: 'Alex@test.com', old_password:'password', new_password:'new_password'}
+    end
   end
 
-  test 'request password sends a message' do
-    flunk
-  end
+  # password recovery instructions request is independent of user
+  # test 'request password sends a message' do
+  # end
 
   test 'update account sends a message' do
-    flunk
-  end
-
-  test 'invalid logins send a message' do
-    flunk
+    mail_test_outline 'update_account_information' do
+      @request.headers['uimp-token'] = tokens(:one).access_token
+      put :update_account, {email: "new-username@gmail.com"}
+    end
   end
 
 end
